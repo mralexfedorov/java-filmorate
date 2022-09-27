@@ -1,11 +1,16 @@
 package ru.yandex.practicum.filmorate.controllers;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,42 +18,50 @@ import java.util.Map;
 
 @RestController
 @Slf4j
+@RequiredArgsConstructor
+@Validated
 public class FilmController {
-    private Map<Integer, Film> films = new HashMap<>();
-    private Integer filmCount = 1;
+
+    private final FilmService filmService;
 
     @PostMapping("/films")
     public Film createFilm(@Valid @RequestBody Film film) {
-
-        film.setId(getAndIncrement(film));
-
-        films.put(film.getId(), film);
-        log.debug("Фильм {} создан.", film.getName());
-        return film;
+        return filmService.createFilm(film);
     }
 
     @PutMapping("/films")
     public Film updateFilm(@RequestBody Film film) {
 
-        if (films.get(film.getId()) == null) {
-            throw new FilmNotFoundException(
-                    String.format("Пользователь с таким id %s не существует", film.getId()));
-        }
-        films.put(film.getId(), film);
-        log.debug("Данные о фильме {} обновлены.", film.getName());
-        return film;
+        return filmService.updateFilm(film);
+    }
+
+    @GetMapping("/films/{id}")
+    public Film getUser(@PathVariable("id") Long filmId) {
+        return filmService.getFilm(filmId);
     }
 
     @GetMapping("/films")
     public List<Film> findAllFilms() {
 
-        return new ArrayList<>(films.values());
+        return filmService.findAllFilms();
     }
 
-    private Integer getAndIncrement(Film film) {
-        if (film.getId() != null) {
-            return film.getId();
-        }
-        return filmCount++;
+    @PutMapping("/films/{id}/like/{userId}")
+    public void addLike(@PathVariable("id") Long filmId,
+                        @PathVariable("userId") Long userId) {
+        filmService.addLike(filmId, userId);
+    }
+
+
+    @DeleteMapping("/films/{id}/like/{userId}")
+    public void deleteLike(@PathVariable("id") Long filmId,
+                           @PathVariable("userId") Long userId) {
+        filmService.deleteLike(filmId, userId);
+    }
+
+
+    @GetMapping("/films/popular")
+    public List<Film> getMostPopular(@RequestParam(name = "count", required = false) Integer count) {
+        return filmService.getMostPopular(count);
     }
 }

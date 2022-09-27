@@ -8,12 +8,14 @@ import ru.yandex.practicum.filmorate.validation.After;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 public class Film {
 
-    @Positive (message = "Некорректный номер id.")
-    private Integer id;
+    @Positive(message = "Некорректный номер id.")
+    private Long id;
 
     @NotBlank(message = "Название фильма не может быть пустым.")
     private String name;
@@ -26,4 +28,6 @@ public class Film {
 
     @Positive(message = "Продолжительность фильма не может быть отрицательной.")
     private Integer duration;
+
+    private Set<Long> likes = new HashSet<>();
 }

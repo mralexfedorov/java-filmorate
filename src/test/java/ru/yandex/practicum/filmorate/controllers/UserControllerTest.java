@@ -7,12 +7,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.yandex.practicum.filmorate.exceptions.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.service.impl.UserServiceImpl;
+import ru.yandex.practicum.filmorate.storage.in_memory.InMemoryUserStorage;
 
 import java.time.LocalDate;
 
@@ -24,6 +28,7 @@ import static ru.yandex.practicum.filmorate.util.Fixtures.getUser;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(UserController.class)
+@Import({UserServiceImpl.class, InMemoryUserStorage.class})
 public class UserControllerTest {
     private static final ObjectMapper om = JsonMapper.builder()
             .addModule(new JavaTimeModule())
@@ -58,7 +63,7 @@ public class UserControllerTest {
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(om.writeValueAsString(user)))
-                .andExpect(status().is4xxClientError())
+                .andExpect(status().is5xxServerError())
                 .andExpect(result ->
                         assertTrue(result.getResolvedException()
                                 instanceof MethodArgumentNotValidException))
@@ -76,7 +81,7 @@ public class UserControllerTest {
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(om.writeValueAsString(user)))
-                .andExpect(status().is4xxClientError())
+                .andExpect(status().is5xxServerError())
                 .andExpect(result ->
                         assertTrue(result.getResolvedException()
                                 instanceof MethodArgumentNotValidException))
@@ -92,7 +97,7 @@ public class UserControllerTest {
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(om.writeValueAsString(user)))
-                .andExpect(status().is4xxClientError())
+                .andExpect(status().is5xxServerError())
                 .andExpect(result ->
                         assertTrue(result.getResolvedException()
                                 instanceof MethodArgumentNotValidException))
@@ -138,7 +143,7 @@ public class UserControllerTest {
         var user = getUser();
 
         controller.createUser(user);
-        user.setId(-1);
+        user.setId(-1L);
 
         mockMvc.perform(put("/users")
                         .contentType(MediaType.APPLICATION_JSON)
