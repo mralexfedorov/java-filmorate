@@ -5,12 +5,14 @@ import ru.yandex.practicum.filmorate.validation.BeforeNow;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 public class User {
 
-    @Positive (message = "Некорректный номер id.")
-    private Integer id;
+    @Positive(message = "Некорректный номер id.")
+    private Long id;
 
     @Email(message = "Введите email.")
     @NotBlank(message = "Введите email.")
@@ -25,4 +27,6 @@ public class User {
 
     @BeforeNow(message = "Некорректная дата рождения.")
     private LocalDate birthday;
+
+    private Set<Long> friends = new HashSet<>();
 }
