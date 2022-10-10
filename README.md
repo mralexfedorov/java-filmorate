@@ -59,7 +59,7 @@
     * неподтверждённая — когда один пользователь отправил запрос на добавление другого пользователя в друзья,
     * подтверждённая — когда второй пользователь согласился на добавление.
 
-![](https://github.com/DaryaSerova/java-filmorate/compare/main...БД_java-filmorate?expand=1)
+![](https://github.com/DaryaSerova/java-filmorate/blob/add-friends-likes/БД_java-filmorate.png)
 
 ### Примеры запросов:
 
