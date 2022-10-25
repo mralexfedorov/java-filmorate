@@ -62,6 +62,7 @@
 
 ![](https://github.com/DaryaSerova/java-filmorate/blob/add-database/БД_java-filmorate.png)
 
+
 ### Примеры запросов:
 
 #### 1. Пользователи
