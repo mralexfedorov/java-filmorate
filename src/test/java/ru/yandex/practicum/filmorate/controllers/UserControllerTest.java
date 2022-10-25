@@ -14,9 +14,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.yandex.practicum.filmorate.exceptions.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.service.impl.UserServiceImpl;
-import ru.yandex.practicum.filmorate.storage.in_memory.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.database.DatabaseUserStorage;
 
 import java.time.LocalDate;
 
@@ -28,7 +27,7 @@ import static ru.yandex.practicum.filmorate.util.Fixtures.getUser;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(UserController.class)
-@Import({UserServiceImpl.class, InMemoryUserStorage.class})
+@Import({UserServiceImpl.class, DatabaseUserStorage.class})
 public class UserControllerTest {
     private static final ObjectMapper om = JsonMapper.builder()
             .addModule(new JavaTimeModule())

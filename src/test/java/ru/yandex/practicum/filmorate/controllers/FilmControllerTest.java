@@ -4,12 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -17,23 +14,19 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.yandex.practicum.filmorate.exceptions.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.impl.FilmServiceImpl;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.in_memory.InMemoryFilmStorage;
-import ru.yandex.practicum.filmorate.storage.in_memory.InMemoryUserStorage;
 
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.yandex.practicum.filmorate.util.Fixtures.getFilm;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.yandex.practicum.filmorate.util.Fixtures.getFilm;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(FilmController.class)
-@Import({FilmServiceImpl.class, InMemoryFilmStorage.class, InMemoryUserStorage.class})
+@Import({FilmServiceImpl.class})
 public class FilmControllerTest {
     private static final ObjectMapper om = JsonMapper.builder()
             .addModule(new JavaTimeModule())
@@ -43,7 +36,6 @@ public class FilmControllerTest {
 
     @Autowired
     private FilmController controller;
-
 
     @Test
     public void shouldCreateFilm() throws Exception {
@@ -137,7 +129,6 @@ public class FilmControllerTest {
         film.setDuration(120);
         film.setName("Новое тестовое имя.");
 
-
         String result = mockMvc.perform(put("/films")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(om.writeValueAsString(film)))
@@ -164,6 +155,5 @@ public class FilmControllerTest {
                         assertTrue(result.getResolvedException()
                                 instanceof FilmNotFoundException));
     }
-
 
 }
