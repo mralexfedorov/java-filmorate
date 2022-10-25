@@ -60,7 +60,7 @@
     * status = true — в таблице две записи о дружбе двух пользователей (id1 = id2; id2 = id1),
     * status = false — в таблице одна запись о дружбе двух пользователей(id1 = id2).
 
-![](https://github.com/DaryaSerova/java-filmorate/compare/main...БД_java-filmorate?expand=1)
+![](https://github.com/DaryaSerova/java-filmorate/blob/add-database/БД_java-filmorate.png)
 
 ### Примеры запросов:
 
