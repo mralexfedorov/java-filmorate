@@ -3,15 +3,19 @@ package ru.yandex.practicum.filmorate.dao.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.constant.FilmConstant;
 import ru.yandex.practicum.filmorate.dao.FilmDao;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.MpaRating;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static ru.yandex.practicum.filmorate.constant.FilmConstant.*;
 
@@ -56,28 +60,27 @@ public class FilmDaoImpl implements FilmDao {
     public Optional<Film> findFilmById(Long id) {
 
         String sqlToFilmTable = "select * from film_t where id = ? ";
-
-        SqlRowSet filmRows = jdbcTemplate.queryForRowSet(sqlToFilmTable, id);
-        if (!filmRows.next()) {
-            return Optional.empty();
-        }
-        Film film = mapToFilm(filmRows);
-        return Optional.of(film);
+        return jdbcTemplate.query(sqlToFilmTable, (rs, rowNum) -> mapToFilm(rs), id)
+                .stream()
+                .filter(el -> el != null)
+                .findFirst();
     }
 
     @Override
     public List<Film> findAllFilms() {
         String sqlToFilmTable = "select * from film_t";
-        SqlRowSet filmRows = jdbcTemplate.queryForRowSet(sqlToFilmTable);
-        List<Film> allFilms = new ArrayList<>();
-        while (filmRows.next()) {
-            allFilms.add(mapToFilm(filmRows));
-        }
-        return allFilms;
+        return jdbcTemplate.query(sqlToFilmTable, (rs, rowNum) -> mapToFilm(rs))
+                .stream()
+                .filter(el -> el != null)
+                .collect(Collectors.toList());
     }
 
 
-    private Film mapToFilm(SqlRowSet filmRows) { //
+    private Film mapToFilm(ResultSet filmRows) throws SQLException {
+        var filmId = filmRows.getLong(ID);
+        if (filmId <= 0) {
+            return null;
+        }
         LocalDate releaseDate = filmRows.getDate(FilmConstant.RELEASE_DATE).toLocalDate();
         return new Film(
                 filmRows.getLong(FilmConstant.ID),

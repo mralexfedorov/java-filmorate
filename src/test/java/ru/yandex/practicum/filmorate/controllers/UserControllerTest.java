@@ -6,16 +6,14 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.yandex.practicum.filmorate.exceptions.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.impl.UserServiceImpl;
-import ru.yandex.practicum.filmorate.storage.database.DatabaseUserStorage;
 
 import java.time.LocalDate;
 
@@ -26,8 +24,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.yandex.practicum.filmorate.util.Fixtures.getUser;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(UserController.class)
-@Import({UserServiceImpl.class, DatabaseUserStorage.class})
+@SpringBootTest
+@AutoConfigureMockMvc
 public class UserControllerTest {
     private static final ObjectMapper om = JsonMapper.builder()
             .addModule(new JavaTimeModule())

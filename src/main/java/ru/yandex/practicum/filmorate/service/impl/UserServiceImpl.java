@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    @Qualifier("databaseUserStorage")
+
     private final UserStorage userStorage;
 
     @Override

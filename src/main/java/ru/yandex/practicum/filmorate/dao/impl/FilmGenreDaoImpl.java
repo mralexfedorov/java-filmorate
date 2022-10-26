@@ -7,11 +7,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.dao.FilmGenreDao;
-import ru.yandex.practicum.filmorate.model.FilmLike;
-import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.Map;
-import java.util.Optional;
 
 import static ru.yandex.practicum.filmorate.constant.FilmGenreConstant.*;
 
@@ -27,7 +24,7 @@ public class FilmGenreDaoImpl implements FilmGenreDao {
         if (linkAlreadyExist(filmId, genreId)) {
             return;
         }
-        Map<String, Object> keys = new SimpleJdbcInsert(this.jdbcTemplate)
+        new SimpleJdbcInsert(this.jdbcTemplate)
                 .withTableName(FILM_GENRE_TABLE)
                 .usingColumns(FILM_ID, GENRE_ID)
                 .usingGeneratedKeyColumns(ID)

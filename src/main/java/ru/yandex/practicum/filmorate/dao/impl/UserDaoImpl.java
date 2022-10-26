@@ -1,16 +1,16 @@
 package ru.yandex.practicum.filmorate.dao.impl;
 
 import lombok.AllArgsConstructor;
-import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import ru.yandex.practicum.filmorate.constant.UserConstant;
 import ru.yandex.practicum.filmorate.dao.UserDao;
 import ru.yandex.practicum.filmorate.model.User;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -55,25 +55,20 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> findAllUsers() {
         String sqlToUserTable = "select * from user_t";
-        SqlRowSet userRows = jdbcTemplate.queryForRowSet(sqlToUserTable);
-        List<User> allUsers = new ArrayList<>();
-        while (userRows.next()) {
-            allUsers.add(mapToUser(userRows));
-        }
-        return allUsers;
+        return jdbcTemplate.query(sqlToUserTable, (rs, rowNum) -> mapToUser(rs))
+                .stream()
+                .filter(el -> el != null)
+                .collect(Collectors.toList());
     }
 
     @Override
     public Optional<User> findUserById(Long id) {
 
         String sqlToUserTable = "select * from user_t where id = ? ";
-
-        SqlRowSet userRows = jdbcTemplate.queryForRowSet(sqlToUserTable, id);
-        if (!userRows.next()) {
-            return Optional.empty();
-        }
-        User user = mapToUser(userRows);
-        return Optional.of(user);
+        return jdbcTemplate.query(sqlToUserTable, (rs, rowNum) -> mapToUser(rs), id)
+                .stream()
+                .filter(el -> el != null)
+                .findFirst();
     }
 
     @Override
@@ -85,15 +80,18 @@ public class UserDaoImpl implements UserDao {
         String inSql = ids.stream().map(Object::toString)
                 .collect(Collectors.joining(", "));
         String sqlToUserTable = String.format("select * from user_t where id in ( %s )", inSql);
-        SqlRowSet userRows = jdbcTemplate.queryForRowSet(sqlToUserTable);
-        while (userRows.next()) {
-            users.add(mapToUser(userRows));
-        }
-        return users;
+        return jdbcTemplate.query(sqlToUserTable, (rs, rowNum) -> mapToUser(rs))
+                .stream()
+                .filter(el -> el != null)
+                .collect(Collectors.toList());
     }
 
 
-    private User mapToUser(SqlRowSet userRows) { //
+    private User mapToUser(ResultSet userRows) throws SQLException { //
+        var userId = userRows.getLong(ID);
+        if (userId <= 0) {
+            return null;
+        }
         LocalDate birthday = userRows.getDate(UserConstant.BIRTHDAY).toLocalDate();
         return new User(
                 userRows.getLong(UserConstant.ID),

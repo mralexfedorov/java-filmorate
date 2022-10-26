@@ -9,8 +9,6 @@ import ru.yandex.practicum.filmorate.dao.impl.FilmDaoImpl;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.MpaRating;
 
-import java.time.LocalDate;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static ru.yandex.practicum.filmorate.util.Fixtures.getFilm;
 
@@ -39,7 +37,7 @@ public class FilmDaoTest {
         film.setMpa(new MpaRating(2L, "PG13"));
 
         var newFilm = filmDao.updateFilm(film);
-        
+
         assertEquals(film.getId(), newFilm.getId());
         assertEquals(film.getName(), newFilm.getName());
         assertEquals(film.getMpa(), newFilm.getMpa());

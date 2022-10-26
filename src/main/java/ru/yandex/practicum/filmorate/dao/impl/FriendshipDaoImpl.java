@@ -3,13 +3,17 @@ package ru.yandex.practicum.filmorate.dao.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.constant.FriendshipConstant;
 import ru.yandex.practicum.filmorate.dao.FriendshipDao;
 import ru.yandex.practicum.filmorate.model.Friendship;
 
-import java.util.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static ru.yandex.practicum.filmorate.constant.FriendshipConstant.*;
 import static ru.yandex.practicum.filmorate.constant.UserConstant.ID;
@@ -48,24 +52,22 @@ public class FriendshipDaoImpl implements FriendshipDao {
     public Optional<Friendship> findFriendship(Friendship friendship) {
         String sqlToFriendshipTable = "select * from friendship_t where user_id = ? and friend_id = ?";
 
-        SqlRowSet friendshipRows = jdbcTemplate.queryForRowSet(sqlToFriendshipTable, friendship.getUserId(),
-                friendship.getFriendId());
-        if (!friendshipRows.next()) {
-            return Optional.empty();
-        }
-        friendship = mapToFriendship(friendshipRows);
-        return Optional.of(friendship);
+        return jdbcTemplate.query(sqlToFriendshipTable, (rs, rowNum) -> mapToFriendship(rs),
+                        friendship.getUserId(),
+                        friendship.getFriendId())
+                .stream()
+                .filter(el -> el != null)
+                .findFirst();
     }
 
 
     public Set<Long> findFriendIdsByUserId(Long userId) {
         String sqlToFriendshipTable = "select * from friendship_t where user_id = ?";
-        SqlRowSet friendshipRows = jdbcTemplate.queryForRowSet(sqlToFriendshipTable, userId);
-        Set<Long> friendIds = new HashSet<>();
-        while (friendshipRows.next()) {
-            friendIds.add(friendshipRows.getLong(FRIEND_ID));
-        }
-        return friendIds;
+        return jdbcTemplate.query(sqlToFriendshipTable, (rs, rowNum) -> mapToFriendship(rs), userId)
+                .stream()
+                .filter(el -> el != null)
+                .map(el -> el.getFriendId())
+                .collect(Collectors.toSet());
     }
 
     private Friendship updateFriendship(Friendship friendship) {
@@ -80,7 +82,12 @@ public class FriendshipDaoImpl implements FriendshipDao {
         return friendship;
     }
 
-    private Friendship mapToFriendship(SqlRowSet friendshipRows) {
+    private Friendship mapToFriendship(ResultSet friendshipRows) throws SQLException {
+        var userId = friendshipRows.getLong(USER_ID);
+        var friendId = friendshipRows.getLong(FRIEND_ID);
+        if (userId <= 0 || friendId <= 0) {
+            return null;
+        }
         return new Friendship(
                 friendshipRows.getLong(FriendshipConstant.ID),
                 friendshipRows.getLong(USER_ID),

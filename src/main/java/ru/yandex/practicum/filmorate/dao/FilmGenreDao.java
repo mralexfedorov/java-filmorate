@@ -6,5 +6,5 @@ public interface FilmGenreDao {
 
     void deleteFilmGenres(Long filmId);
 
-    public boolean linkAlreadyExist(Long filmId, Long genreId);
+    boolean linkAlreadyExist(Long filmId, Long genreId);
 }

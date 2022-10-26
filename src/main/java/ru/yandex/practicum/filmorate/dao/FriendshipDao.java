@@ -10,7 +10,7 @@ public interface FriendshipDao {
 
     void deleteFriendship(Friendship friendship);
 
-    public Set<Long> findFriendIdsByUserId(Long userId);
+    Set<Long> findFriendIdsByUserId(Long userId);
 
-    public Optional<Friendship> findFriendship(Friendship friendship);
+    Optional<Friendship> findFriendship(Friendship friendship);
 }
