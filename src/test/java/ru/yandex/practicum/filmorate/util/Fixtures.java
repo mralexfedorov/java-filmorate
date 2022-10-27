@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.util;
 
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.MpaRating;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
@@ -15,6 +16,7 @@ public class Fixtures {
         film.setDescription("Тестовое описание");
         film.setDuration(100);
         film.setReleaseDate(LocalDate.now().minusDays(100));
+        film.setMpa(new MpaRating(1L, "PG"));
         film.setId(1L);
         return film;
     }

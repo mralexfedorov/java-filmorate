@@ -50,16 +50,18 @@
 
 Схема отображает отношения таблиц в базе данных:
 
-* films - данные о фильмах (primary key - film_id, foreign key - mpa_rating_id)
-* genre - названия жанров фильма (primary key - genre_id)
-* mpa_rating - определяет возрастное ограничение для фильма (primary key - mpa_rating_id)
-* films_likes - информация о лайках фильма и кто их поставил (primary key - film_id, foreign key - user_id)
-* users - данные о пользователях (primary key - user_id)
-* friends - содержит информации о статусе «дружбы» между двумя пользователями (primary key - user_id)
-    * неподтверждённая — когда один пользователь отправил запрос на добавление другого пользователя в друзья,
-    * подтверждённая — когда второй пользователь согласился на добавление.
+* film_t - данные о фильмах (primary key - id, foreign key - mpa_rating_id)
+* genre_t - названия жанров фильма (primary key - id)
+* film_genre_t - данные о жанрах какого-то фильма. У одного фильма может быть несколько жанров.
+* mpa_rating_t - определяет возрастное ограничение для фильма (primary key - id)
+* film_like_t - информация о лайках фильма и кто их поставил (primary key - id, foreign key - user_id, film_id)
+* user_t - данные о пользователях (primary key - id)
+* friendship_t - содержит информации о статусе «дружбы» между двумя пользователями (primary key - id)
+    * status = true — в таблице две записи о дружбе двух пользователей (id1 = id2; id2 = id1),
+    * status = false — в таблице одна запись о дружбе двух пользователей(id1 = id2).
 
-![](https://github.com/DaryaSerova/java-filmorate/blob/add-friends-likes/БД_java-filmorate.png)
+![](https://github.com/DaryaSerova/java-filmorate/blob/add-database/БД_java-filmorate.png)
+
 
 ### Примеры запросов:
 
@@ -68,74 +70,74 @@
 создание пользователя
 
 ```
-INSERT INTO users (name, email, login, birthday)
+INSERT INTO user_t (name, email, login, birthday)
 VALUES ( ?, ?, ?, ? );
 ```
 
 редактирование пользователя
 
 ```
-UPDATE users
+UPDATE user_t
 SET email = ?,
 login = ?,
 name = ?,
 birthday = ?
-WHERE user_id = ?
+WHERE id = ?
 ```
 
 получение списка всех пользователей
 
 ```
 SELECT *
-FROM users
+FROM user_t
 ```
 
 получение информации о пользователе по его id
 
 ```
 SELECT *
-FROM users
-WHERE user_id = ?
+FROM user_t
+WHERE id = ?
 ```
 
 добавление в друзья
 
 ```
-INSERT IGNORE INTO friends (user_id, friend_id)
-VALUES (?, ?)
+INSERT INTO friendship_t (user_id, friend_id, status)
+VALUES (?, ?, ?)
 ```
 
 удаление из друзей
 
 ```
 DELETE
-FROM friends
+FROM friendship_t
 WHERE user_id = ? AND friend_id = ?
 ```
 
 возвращает список пользователей, являющихся его друзьями
 
 ```
-SELECT users.*
-FROM users
-INNER JOIN friends ON users.user_id = friends.friend_id
-WHERE friends.user_id = ?
+SELECT ut.*
+FROM friendship_t AS fst
+INNER JOIN user_t AS ut ON ut.id = fst.friend_id
+WHERE fst.user_id = ?
 ```
 
 список друзей, общих с другим пользователем
 
 ```
-SELECT users.*
-FROM users
-INNER JOIN friends ON users.user_id = friends.friend_id
-WHERE friends.user_id = ?
+SELECT ut.*
+FROM user_t AS ut
+INNER JOIN friendship_t AS fst ON ut.id = fst.friend_id
+WHERE ut.id = ?
 
 INTERSECT
 
-SELECT users.*
-FROM users
-INNER JOIN friends ON users.user_id = friends.friend_id
-WHERE friends.user_id = ?
+SELECT ut.*
+FROM user_t as ut
+INNER JOIN friendship_t as fst ON ut.id = fst.friend_id
+WHERE fst.user_id = ?
 ```
 
 #### 2. Фильмы
@@ -143,48 +145,48 @@ WHERE friends.user_id = ?
 создание фильма
 
 ```
-INSERT INTO films (name, description, release_date, duration, mpa_rating_id)
+INSERT INTO film_t (name, description, release_date, duration, mpa_rating_id)
 VALUES (?, ?, ?, ?, ?)
 ```
 
 редактирование фильма
 
 ```
-UPDATE films
+UPDATE film_t
 SET name = ?,
 description = ?,
 release_date = ?,
 duration = ?,
 mpa_rating_id = ?
-WHERE film_id = ?
+WHERE id = ?
 ```
 
 получение списка всех фильмов
 
 ```
-SELECT films.*, mpa_rating.name, COUNT(films_likes.user_id) AS rate
-FROM films
-LEFT JOIN mpa_rating ON films.mpa_rating_id = mpa_rating.mpa_rating_id
-LEFT JOIN films_likes ON films.film_id = films_likes.film_id
-GROUP BY films.film_id
-ORDER BY films.film_id
+SELECT ft.*, mpt.name, COUNT(flt.user_id) AS rate
+FROM film_t AS ft
+LEFT JOIN mpa_rating_t AS mpt ON ft.mpa_rating_id = mpt.id
+LEFT JOIN film_like_t AS flt ON ft.id = flt.film_id
+GROUP BY ft.id
+ORDER BY ft.id
 ```
 
 получение информации о фильме по его id
 
 ```
-SELECT films.*, mpa_rating.name, COUNT(films_likes.user_id) AS rate
-FROM films
-LEFT JOIN mpa_rating ON films.mpa_rating_id = mpa_rating.mpa_rating_id
-LEFT JOIN films_likes ON films.film_id = films_likes.film_id
-WHERE films.film_id = ?
-GROUP BY films.film_id
+SELECT ft.*, mpt.name, COUNT(flt.user_id) AS rate
+FROM film_t AS ft
+LEFT JOIN mpa_rating_t AS mpt ON ft.mpa_rating_id = mpt.id
+LEFT JOIN film_like_t AS flt ON ft.id = flt.film_id
+WHERE ft.id = 2
+GROUP BY ft.id
 ```
 
 пользователь ставит лайк фильму
 
 ```
-INSERT IGNORE INTO films_likes (film_id, user_id)
+INSERT INTO film_like_t (film_id, user_id)
 VALUES (?, ?)
 ```
 
@@ -192,18 +194,18 @@ VALUES (?, ?)
 
 ```
 DELETE
-FROM films_likes
+FROM film_like_t
 WHERE film_id = ? AND user_id = ?
 ```
 
 возвращает список из первых count фильмов по количеству лайков
 
 ```
-SELECT films.*, mpa_rating.name, COUNT(films_likes.user_id) AS rate
-FROM films
-LEFT JOIN mpa_rating ON films.mpa_rating_id = mpa_rating.mpa_rating_id
-LEFT JOIN films_likes ON films.film_id = films_likes.film_id
-GROUP BY films.film_id
-ORDER BY rate DESC, films.film_id
+SELECT ft.*, mpt.name, COUNT(flt.user_id) AS rate
+FROM film_t AS ft
+LEFT JOIN mpa_rating_t AS mpt ON ft.mpa_rating_id = mpt.id
+LEFT JOIN film_like_t AS flt ON ft.id = flt.film_id
+GROUP BY ft.id
+ORDER BY rate DESC, ft.id
 LIMIT ?
 ```

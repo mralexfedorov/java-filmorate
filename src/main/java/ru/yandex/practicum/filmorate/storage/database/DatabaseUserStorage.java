@@ -1,73 +1,59 @@
-package ru.yandex.practicum.filmorate.storage.in_memory;
+package ru.yandex.practicum.filmorate.storage.database;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.dao.UserDao;
 import ru.yandex.practicum.filmorate.exceptions.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Set;
 
 @Component
 @Slf4j
-public class InMemoryUserStorage implements UserStorage {
-
-    private Map<Long, User> users = new HashMap<>();
-
-    private Long userCount = 1L;
+@AllArgsConstructor
+@Primary
+public class DatabaseUserStorage implements UserStorage {
+    private final UserDao userDao;
 
     @Override
     public User createUser(User user) {
         if (user.getName() == null || user.getName().isEmpty()) {
             user.setName(user.getLogin());
         }
-
-        user.setId(getAndIncrement(user));
-
+        userDao.saveUser(user);
         log.debug("Пользователь {} создан.", user.getName());
-        users.put(user.getId(), user);
         return user;
     }
 
     @Override
     public User updateUser(User user) {
-        findUser(user.getId());
-        users.put(user.getId(), user);
+        findUserById(user.getId());
+        userDao.updateUser(user);
         log.debug("Данные о пользователе {} обновлены.", user.getName());
         return user;
     }
 
     @Override
     public List<User> findAllUsers() {
-        return new ArrayList<>(users.values());
+        return userDao.findAllUsers();
     }
 
     @Override
-    public List<User> findAllUsersByIds(Set<Long> ids) {
-        List<User> result = new ArrayList<>();
-        for (Long id : ids) {
-            var user = findUser(id);
-            result.add(user);
-        }
-        return result;
-    }
-
-    @Override
-    public User findUser(Long id) {
-        var user = users.get(id);
-        if (user != null) {
-            return user;
+    public User findUserById(Long id) {
+        var user = userDao.findUserById(id);
+        if (user.isPresent()) {
+            return user.get();
         }
         throw new UserNotFoundException(
                 String.format("Пользователь с таким id %s не существует", id));
     }
 
-
-    private Long getAndIncrement(User user) {
-        if (user.getId() != null) {
-            return user.getId();
-        }
-        return userCount++;
+    @Override
+    public List<User> findAllUsersByIds(Set<Long> ids) {
+        return userDao.findAllUserByIds(ids);
     }
 }

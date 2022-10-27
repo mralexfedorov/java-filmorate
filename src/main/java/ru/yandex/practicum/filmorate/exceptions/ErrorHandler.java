@@ -11,7 +11,8 @@ import javax.validation.ValidationException;
 @RestControllerAdvice("ru.yandex.practicum.filmorate.controllers")
 public class ErrorHandler {
 
-    @ExceptionHandler({FilmNotFoundException.class, UserNotFoundException.class})
+    @ExceptionHandler({FilmNotFoundException.class, UserNotFoundException.class,
+            GenreNotFoundException.class, MpaRatingNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFoundException(final RuntimeException e) {
         return new ErrorResponse(e.getMessage());
