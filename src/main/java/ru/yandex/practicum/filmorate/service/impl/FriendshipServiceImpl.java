@@ -4,12 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dao.FriendshipDao;
 import ru.yandex.practicum.filmorate.dao.UserDao;
+import ru.yandex.practicum.filmorate.exceptions.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Friendship;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.FriendshipService;
 import ru.yandex.practicum.filmorate.storage.FriendshipStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.database.DatabaseUserStorage;
 
+import javax.xml.crypto.Data;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,15 +25,16 @@ public class FriendshipServiceImpl implements FriendshipService {
 
     private final FriendshipStorage friendshipStorage;
     private final UserStorage userStorage;
+    private final UserDao userDao;
 
     @Override
     public Friendship addFriend(Long userId, Long friendId) {
         userStorage.findUserById(userId);
         userStorage.findUserById(friendId);
-        return friendshipStorage.createFriendship(Friendship.builder()
-                .userId(userId)
-                .friendId(friendId)
-                .build());
+            return friendshipStorage.createFriendship(Friendship.builder()
+                    .userId(userId)
+                    .friendId(friendId)
+                    .build());
     }
 
     @Override
@@ -43,9 +47,14 @@ public class FriendshipServiceImpl implements FriendshipService {
 
     @Override
     public List<User> getFriends(Long userId) {
-        Set<Long> friendIds = friendshipStorage.findFriendIdsByUserId(userId);
-        return userStorage.findAllUsersByIds(friendIds);
-    }
+        var user = userDao.findUserById(userId);
+        if (user.isPresent()) {
+            Set<Long> friendIds = friendshipStorage.findFriendIdsByUserId(userId);
+            return userStorage.findAllUsersByIds(friendIds);
+        }
+        throw new UserNotFoundException("Невозможно получить друзей у несуществующих пользователей");
+        }
+
 
     @Override
     public List<User> getCommonFriends(Long userId1, Long userId2) {
