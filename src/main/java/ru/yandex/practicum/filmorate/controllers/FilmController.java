@@ -58,4 +58,10 @@ public class FilmController {
     public List<Film> getMostPopular(@RequestParam(name = "count", required = false) Integer count) {
         return filmLikeService.getMostPopular(count);
     }
+
+//    @GetMapping("/films/director/{directorId}?sortBy=[year,likes]")
+//    public List<Film> getMostPopularDirectors (@PathVariable("directorId") Long directorId,
+//                                               @RequestParam(name = "count", required = false) Integer count) {
+//        return filmLikeService.getMostPopularDirectors(directorId, );
+//    }
 }

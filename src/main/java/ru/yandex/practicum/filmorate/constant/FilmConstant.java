@@ -10,5 +10,4 @@ public class FilmConstant {
     public static final String DURATION = "DURATION";
     public static final String MPA_RATING_ID = "MPA_RATING_ID";
 
-
 }
