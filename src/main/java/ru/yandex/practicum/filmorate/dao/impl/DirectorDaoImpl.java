@@ -97,9 +97,12 @@ public class DirectorDaoImpl implements DirectorDao {
 
     @Override
     public void deleteDirector(Long id) {
+        String sqlToDeleteFilmDirectorTable = "delete from film_director_t where director_id = ?";
+        jdbcTemplate.update(sqlToDeleteFilmDirectorTable, id);
         String sqlToDeleteDirector = "delete from directors_t where id = ?";
         jdbcTemplate.update(sqlToDeleteDirector, id);
     }
+
 
     public boolean linkAlreadyExist(Long filmId, Long directorId) {
 
