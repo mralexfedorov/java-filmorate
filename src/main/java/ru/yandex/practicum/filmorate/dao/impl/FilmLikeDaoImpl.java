@@ -62,5 +62,6 @@ public class FilmLikeDaoImpl implements FilmLikeDao {
                 .userId(filmLikeRows.getLong(USER_ID))
                 .filmId(filmLikeRows.getLong(FILM_ID))
                 .build();
+
     }
 }
