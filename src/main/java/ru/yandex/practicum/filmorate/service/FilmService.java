@@ -22,4 +22,7 @@ public interface FilmService {
     Collection<Film> findFilmsByDirector(String query);
 
     Collection<Film> findFilmsByFriend(Long userId, Long friendId);
+    
+    void deleteFilm(Long filmId);
+
 }

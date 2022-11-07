@@ -53,4 +53,8 @@ public class FilmServiceImpl implements FilmService {
         return filmStorage.findFilmsByFriend(userId, friendId);
     }
 
+    public void deleteFilm(Long filmId) {
+        filmStorage.deleteFilm(filmId);
+    }
+
 }

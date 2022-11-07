@@ -15,6 +15,8 @@
 * DELETE /films/{id}/like/{userId} — удалить лайк фильма
 * GET /films/popular?count={count} — возвращает список из первых count фильмов по количеству лайков.
   Если значение параметра count не задано, возвращает первые 10.
+* GET /films/director/{directorId}?sortBy=[year,likes] - возвращает список фильмов выбранного режиссера, 
+отсортированных либо по году релиза, либо по количеству лайков
 
 #### 2. Пользователи
 
@@ -26,6 +28,16 @@
 * DELETE /users/{id}/friends/{friendId} — удаление из друзей
 * GET /users/{id}/friends — возвращает список друзей
 * GET /users/{id}/friends/common/{otherId} — возвращает список друзей, общих с другим пользователем
+
+#### 3. Режиссеры
+
+* POST /directors - создание режиссера
+* GET /directors - возвращает список всех режиссеров
+* GET /directors/{id} - возвращает информацию о выбранном режиссеры
+* PUT /directors — редактирование режиссера
+* DELETE /directors/{id} - удаление режиссера
+
+
 
 ### Валидация
 
@@ -53,6 +65,8 @@
 * film_t - данные о фильмах (primary key - id, foreign key - mpa_rating_id)
 * genre_t - названия жанров фильма (primary key - id)
 * film_genre_t - данные о жанрах какого-то фильма. У одного фильма может быть несколько жанров.
+* film_director_t - данные о режиссерах какого-то фильма. У одного фильма может быть несколько режиссеров
+* directors_t - имена режиссеров (primary key - id)
 * mpa_rating_t - определяет возрастное ограничение для фильма (primary key - id)
 * film_like_t - информация о лайках фильма и кто их поставил (primary key - id, foreign key - user_id, film_id)
 * user_t - данные о пользователях (primary key - id)

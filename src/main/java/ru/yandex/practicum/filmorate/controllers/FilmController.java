@@ -71,6 +71,7 @@ public class FilmController {
                                                @RequestParam("sortBy") String sort) {
             return directorService.getDirectorSort(directorId, sort);
     }
+
     @GetMapping("/films/search")
     Collection<Film> findFilmByTitleOrDirector(@RequestParam String query, @RequestParam String by) {
         log.info("началась обработка строки, query=" + query + ",by=" + by);
@@ -86,11 +87,18 @@ public class FilmController {
             return filmService.findFilmsByDirector(query);
         } else return null;
     }
+    
     @GetMapping("/films/common")
     Collection<Film> findFilmsByFriends(@RequestParam Long userId,
                                         @RequestParam Long friendId) {
         log.info("запрос на получение общих с другом фильмов");
         return filmService.findFilmsByFriend(userId, friendId);
     }
-
+    
+    //`DELETE /films/{filmId}`
+    //Удаляет фильм по идентификатору.
+    @DeleteMapping("/films/{filmId}")
+    public void  deleteFilm(@PathVariable Long filmId) {
+        filmService.deleteFilm(filmId);
+    }
 }

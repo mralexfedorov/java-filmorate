@@ -181,4 +181,8 @@ public class FilmDaoImpl implements FilmDao {
                         .build());
     }
 
+    public void deleteFilm(Film film) {
+        String sql = "delete from film_t where id = ? ";
+        jdbcTemplate.update(sql, film.getId());
+    }
 }

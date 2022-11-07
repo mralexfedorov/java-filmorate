@@ -12,7 +12,8 @@ import javax.validation.ValidationException;
 public class ErrorHandler {
 
     @ExceptionHandler({FilmNotFoundException.class, UserNotFoundException.class,
-            GenreNotFoundException.class, MpaRatingNotFoundException.class, DirectorNotFoundException.class})
+            GenreNotFoundException.class, MpaRatingNotFoundException.class, ReviewNotFoundException.class})
+
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFoundException(final RuntimeException e) {
         return new ErrorResponse(e.getMessage());

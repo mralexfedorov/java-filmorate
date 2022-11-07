@@ -17,5 +17,5 @@ public interface UserStorage {
 
     List<User> findAllUsersByIds(Set<Long> ids);
 
-
+    void deleteUser(Long id);
 }
