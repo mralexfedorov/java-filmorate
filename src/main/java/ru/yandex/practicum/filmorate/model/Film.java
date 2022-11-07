@@ -35,9 +35,13 @@ public class Film {
     @Positive(message = "Продолжительность фильма не может быть отрицательной.")
     private Integer duration;
 
+    private int rate;
+
     private List<Long> likes = new ArrayList<>();
 
     private List<Genre> genres;
+
+    private List<Director> directors;
 
     private MpaRating mpa;
 
@@ -49,5 +53,14 @@ public class Film {
         this.releaseDate = releaseDate;
         this.duration = duration;
         this.mpa = mpa;
+    }
+    public Film(Long id, String name, String description,
+                LocalDate releaseDate, Integer duration, int rate) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+        this.rate = rate;
     }
 }
