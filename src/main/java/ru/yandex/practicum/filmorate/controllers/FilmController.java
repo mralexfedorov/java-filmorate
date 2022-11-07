@@ -67,4 +67,11 @@ public class FilmController {
                                                @RequestParam("sortBy") String sort) {
             return directorService.getDirectorSort(directorId, sort);
     }
+    
+    //`DELETE /films/{filmId}`
+    //Удаляет фильм по идентификатору.
+    @DeleteMapping("/films/{filmId}")
+    public void  deleteFilm(@PathVariable Long filmId) {
+        filmService.deleteFilm(filmId);
+    }
 }
