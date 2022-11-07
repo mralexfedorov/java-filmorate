@@ -39,6 +39,8 @@ public class Film {
 
     private List<Genre> genres;
 
+    private List<Director> directors;
+
     private MpaRating mpa;
 
     public Film(Long id, String name, String description,
