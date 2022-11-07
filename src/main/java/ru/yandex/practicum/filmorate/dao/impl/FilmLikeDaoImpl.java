@@ -32,6 +32,7 @@ public class FilmLikeDaoImpl implements FilmLikeDao {
                         FILM_ID, filmLike.getFilmId()))
                 .getKeys();
         filmLike.setId((Long) keys.get(ID));
+        jdbcTemplate.update("UPDATE film_t SET rate = rate + 1");
         return filmLike;
     }
 
@@ -49,6 +50,7 @@ public class FilmLikeDaoImpl implements FilmLikeDao {
         String sqlToFilmLikeTable = "delete from film_like_t where user_id = ? and film_id = ?";
         jdbcTemplate.update(sqlToFilmLikeTable, filmLike.getUserId(),
                 filmLike.getFilmId());
+        jdbcTemplate.update("UPDATE film_t SET rate = rate - 1");
     }
 
     private FilmLike mapToFilmLike(ResultSet filmLikeRows) throws SQLException {

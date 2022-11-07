@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.dao.DirectorDao;
 import ru.yandex.practicum.filmorate.dao.FilmDao;
 import ru.yandex.practicum.filmorate.dao.FilmGenreDao;
 import ru.yandex.practicum.filmorate.exceptions.FilmNotFoundException;
+import ru.yandex.practicum.filmorate.exceptions.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
@@ -18,6 +19,7 @@ import ru.yandex.practicum.filmorate.storage.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.MpaRatingStorage;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,6 +72,28 @@ public class DatabaseFilmStorage implements FilmStorage {
     }
 
     @Override
+    public Collection<Film> findFilmsByTitle(String title) {
+        return filmDao.getFilmsByTitle(title);
+    }
+
+    @Override
+    public Collection<Film> findFilmsByDirector(String by) {
+        return filmDao.findFilmsByDirector(by);
+    }
+
+    @Override
+    public Collection<Film> findFilmsByFriend(Long userId, Long friendId) {
+        if (userId < 0 || friendId < 0) {
+            throw new UserNotFoundException("Один или оба пользователя не найдены");
+        }
+        var result= filmDao.findFilmsByFriend(userId, friendId);
+        log.info("поиск общих фильмов finish");
+        return result;
+    }
+
+    @Override
+    public Collection<Film> getFilmsSearchByDirectorAndTitle(String substring) {
+        return filmDao.getFilmsSearchByDirectorAndTitle(substring);
     public void deleteFilm(Long id) {
         Optional<Film> film = filmDao.findFilmById(id);
         filmDao.deleteFilm(film.get());
