@@ -15,4 +15,6 @@ public interface FilmDao {
 
     List<Film> findAllFilms();
 
+    void deleteFilm(Film film);
+
 }

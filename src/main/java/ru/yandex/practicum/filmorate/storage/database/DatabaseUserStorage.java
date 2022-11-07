@@ -4,12 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.dao.FriendshipDao;
 import ru.yandex.practicum.filmorate.dao.UserDao;
 import ru.yandex.practicum.filmorate.exceptions.UserNotFoundException;
+import ru.yandex.practicum.filmorate.model.Friendship;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.FriendshipService;
+import ru.yandex.practicum.filmorate.service.impl.FriendshipServiceImpl;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Component
@@ -18,6 +23,7 @@ import java.util.Set;
 @Primary
 public class DatabaseUserStorage implements UserStorage {
     private final UserDao userDao;
+    private final FriendshipDao friendshipDao;
 
     @Override
     public User createUser(User user) {
@@ -51,9 +57,17 @@ public class DatabaseUserStorage implements UserStorage {
         throw new UserNotFoundException(
                 String.format("Пользователь с таким id %s не существует", id));
     }
+    //тест
 
     @Override
     public List<User> findAllUsersByIds(Set<Long> ids) {
         return userDao.findAllUserByIds(ids);
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        Optional<User> user = userDao.findUserById(id);
+        userDao.deleteUser(user.get());
+
     }
 }

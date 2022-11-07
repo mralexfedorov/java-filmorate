@@ -92,4 +92,9 @@ public class FilmDaoImpl implements FilmDao {
                         .id(filmRows.getLong(FilmConstant.MPA_RATING_ID))
                         .build());
     }
+
+    public void deleteFilm(Film film) {
+        String sql = "delete from film_t where id = ? ";
+        jdbcTemplate.update(sql, film.getId());
+    }
 }

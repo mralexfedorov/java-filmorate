@@ -86,6 +86,12 @@ public class UserDaoImpl implements UserDao {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public void deleteUser(User user) {
+        String sql = "delete from user_t where id = ? ";
+        jdbcTemplate.update(sql, user.getId());
+    }
+
 
     private User mapToUser(ResultSet userRows) throws SQLException { //
         var userId = userRows.getLong(ID);

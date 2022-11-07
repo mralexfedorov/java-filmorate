@@ -14,4 +14,6 @@ public interface FilmService {
 
     List<Film> findAllFilms();
 
+    void deleteFilm(Long filmId);
+
 }

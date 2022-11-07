@@ -35,4 +35,9 @@ public class UserServiceImpl implements UserService {
         return userStorage.findAllUsers();
     }
 
+    @Override
+    public void deleteUser(Long userId) {
+        userStorage.deleteUser(userId);
+    }
+
 }
