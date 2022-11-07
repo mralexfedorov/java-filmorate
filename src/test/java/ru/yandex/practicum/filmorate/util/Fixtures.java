@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.util;
 
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.MpaRating;
+import ru.yandex.practicum.filmorate.model.Review;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
@@ -30,6 +31,15 @@ public class Fixtures {
         user.setId(1L);
         return user;
     }
+
+    public static Review getReview() {
+        Review review = new Review();
+        review.setContent("Отзыв положительный");
+        review.setIsPositive(true);
+        review.setUseful(0);
+        return review;
+    }
+
 
 
 }
