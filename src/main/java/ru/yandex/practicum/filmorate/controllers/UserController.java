@@ -69,4 +69,11 @@ public class UserController {
         return friendshipService.getCommonFriends(userId1, userId2);
     }
 
+    //DELETE /users/{userId}`
+    //Удаляет пользователя по идентификатору.
+    @DeleteMapping("/users/{userId}")
+    public void  deleteUser(@PathVariable Long userId) {
+        userService.deleteUser(userId);
+    }
+
 }

@@ -57,6 +57,12 @@ public class DatabaseFilmStorage implements FilmStorage {
     }
 
     @Override
+    public void deleteFilm(Long id) {
+        Optional<Film> film = filmDao.findFilmById(id);
+        filmDao.deleteFilm(film.get());
+    }
+
+    @Override
     public Film updateFilm(Film film) {
         findFilm(film.getId());
         filmGenreDao.deleteFilmGenres(film.getId());

@@ -32,4 +32,11 @@ public class FilmServiceImpl implements FilmService {
     public List<Film> findAllFilms() {
         return filmStorage.findAllFilms();
     }
+
+    @Override
+    public void deleteFilm(Long filmId) {
+        filmStorage.deleteFilm(filmId);
+    }
+
+
 }
