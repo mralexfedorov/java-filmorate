@@ -57,6 +57,7 @@ public class DatabaseUserStorage implements UserStorage {
         throw new UserNotFoundException(
                 String.format("Пользователь с таким id %s не существует", id));
     }
+    //тест
 
     @Override
     public List<User> findAllUsersByIds(Set<Long> ids) {
