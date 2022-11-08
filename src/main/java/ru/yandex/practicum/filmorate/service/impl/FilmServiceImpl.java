@@ -6,6 +6,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -32,4 +33,24 @@ public class FilmServiceImpl implements FilmService {
     public List<Film> findAllFilms() {
         return filmStorage.findAllFilms();
     }
+
+    @Override
+    public Collection<Film> findFilmsByTitle(String title) {
+        return filmStorage.findFilmsByTitle(title);
+    }
+    @Override
+    public Collection<Film> getFilmsSearchByDirectorAndTitle(String query) {
+        return filmStorage.getFilmsSearchByDirectorAndTitle(query);
+    }
+
+    @Override
+    public Collection<Film> findFilmsByDirector(String by) {
+        return filmStorage.findFilmsByDirector(by);
+    }
+
+    @Override
+    public Collection<Film> findFilmsByFriend(Long userId, Long friendId) {
+        return filmStorage.findFilmsByFriend(userId, friendId);
+    }
+
 }
