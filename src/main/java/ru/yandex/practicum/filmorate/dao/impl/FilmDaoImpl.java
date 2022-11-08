@@ -1,24 +1,17 @@
 package ru.yandex.practicum.filmorate.dao.impl;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.constant.DirectorConstant;
 import ru.yandex.practicum.filmorate.constant.FilmConstant;
 import ru.yandex.practicum.filmorate.dao.FilmDao;
-import ru.yandex.practicum.filmorate.dao.GenreDao;
-import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.MpaRating;
-import ru.yandex.practicum.filmorate.storage.DirectorStorage;
-import ru.yandex.practicum.filmorate.storage.GenreStorage;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -26,26 +19,21 @@ import java.util.stream.Collectors;
 
 import static ru.yandex.practicum.filmorate.constant.FilmConstant.*;
 
-@Slf4j
 @Component
 @AllArgsConstructor
 public class FilmDaoImpl implements FilmDao {
     private final JdbcTemplate jdbcTemplate;
-    GenreDao genreDao;
-    DirectorStorage directorStorage;
-    GenreStorage genreStorage;
 
     @Override
     public Film saveFilm(Film film) {
         Map<String, Object> keys = new SimpleJdbcInsert(this.jdbcTemplate)
                 .withTableName(FILM_TABLE)
-                .usingColumns(NAME, DESCRIPTION, RELEASE_DATE, DURATION, RATE, MPA_RATING_ID)
+                .usingColumns(NAME, DESCRIPTION, RELEASE_DATE, DURATION, MPA_RATING_ID)
                 .usingGeneratedKeyColumns(ID)
                 .executeAndReturnKeyHolder(Map.of(NAME, film.getName(),
                         DESCRIPTION, film.getDescription(),
                         RELEASE_DATE, java.sql.Date.valueOf(film.getReleaseDate()),
                         DURATION, film.getDuration(),
-                        RATE, film.getRate(),
                         MPA_RATING_ID, film.getMpa().getId()))
                 .getKeys();
         film.setId((Long) keys.get(ID));
@@ -55,8 +43,7 @@ public class FilmDaoImpl implements FilmDao {
     @Override
     public Film updateFilm(Film film) {
         String sql =
-                "update film_t set id = ?, name = ?, description = ?, release_date = ?, duration = ?," +
-                        " rate = ?, mpa_rating_id = ?"
+                "update film_t set id = ?, name = ?, description = ?, release_date = ?, duration = ?, mpa_rating_id = ?"
                         + " where id = ? ";
         jdbcTemplate.update(sql,
                 film.getId(),
@@ -64,7 +51,6 @@ public class FilmDaoImpl implements FilmDao {
                 film.getDescription(),
                 film.getReleaseDate(),
                 film.getDuration(),
-                film.getRate(),
                 film.getMpa().getId(),
                 film.getId());
         return film;
@@ -89,74 +75,6 @@ public class FilmDaoImpl implements FilmDao {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public List<Film> getFilmsByTitle(String substring) {
-        log.info("продолжается обработка строки, query=" + substring);
-        String sql = "SELECT * FROM film_t " +
-                " where  LOWER(name) LIKE ?" +
-                " ORDER BY rate DESC";
-        log.info("обработка sql");
-        return jdbcTemplate.query(sql, (rs, rowNum) -> mapToFilm(rs),
-                        new String[]{"%" + substring.toLowerCase() + "%"})
-                .stream()
-                .filter(el -> el != null)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public Collection<Film> findFilmsByDirector(String substring) {
-        log.info("продолжается обработка строки, query=" + substring);
-        String sql = "SELECT *, dt.NAME AS dt_name FROM film_t f " +
-                " JOIN film_director_t fd  ON f.id = fd.film_id " +
-                " JOIN directors_t dt ON dt.id = fd.director_id " +
-                "WHERE LOWER(dt.name) LIKE ? " +
-                "ORDER BY rate DESC";
-
-        log.info("обработка sql");
-        return jdbcTemplate.query(sql, (rs, rowNum) -> mapRowToFilmWithDirector(rs),
-                        new String[]{"%" + substring.toLowerCase() + "%"})
-                .stream()
-                .filter(el -> el != null)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public Collection<Film> getFilmsSearchByDirectorAndTitle(String substring) {
-        log.info("продолжается обработка строки, query=" + substring);
-        String sql = "SELECT *, dt.NAME AS dt_name FROM film_t f " +
-                " LEFT JOIN film_director_t fd  ON f.id = fd.film_id" +
-                " LEFT JOIN directors_t dt ON dt.id = fd.director_id" +
-                " WHERE LOWER(dt.name) LIKE ? " +
-                " OR LOWER(f.name) LIKE ?" +
-                " ORDER BY rate";
-        log.info("обработка sql");
-        return jdbcTemplate.query(sql, (rs, rowNum) -> mapRowToFilmWithDirector(rs),
-                        new String[]{"%" + substring.toLowerCase() + "%", "%" + substring.toLowerCase() + "%"})
-                .stream()
-                .filter(el -> el != null)
-                .collect(Collectors.toList());
-
-    }
-
-    @Override
-    public Collection<Film> findFilmsByFriend(Long userId, Long friendId) {
-        log.info("поиск общих фильмов");
-        String sql1 = "SELECT f.*, mpa.NAME AS mpa_name FROM film_t f" +
-                " JOIN MPA_RATING_T mpa on mpa.ID = F.MPA_RATING_ID" +
-                " LEFT JOIN FILM_LIKE_T fl on f.ID  = fl.FILM_ID" +
-                " WHERE F.ID IN (SELECT FILM_ID FROM FILM_LIKE_T" +
-                " WHERE USER_ID = ? OR USER_ID = ?" +
-                " GROUP BY FILM_ID" +
-                " HAVING COUNT(FILM_ID) > 1)" +
-                " GROUP BY FILM_ID" +
-                " ORDER BY COUNT(fl.FILM_ID) DESC";
-
-        return jdbcTemplate.query(sql1, (rs, rowNum) -> mapToFilmWithMpaName(rs), userId, friendId)
-                .stream()
-                .filter(el -> el != null)
-                .collect(Collectors.toList());
-
-    }
 
     private Film mapToFilm(ResultSet filmRows) throws SQLException {
         var filmId = filmRows.getLong(ID);
@@ -174,65 +92,4 @@ public class FilmDaoImpl implements FilmDao {
                         .id(filmRows.getLong(FilmConstant.MPA_RATING_ID))
                         .build());
     }
-
-    private Film mapToFilmWithMpaName(ResultSet filmRows) throws SQLException {
-        var filmId = filmRows.getLong(ID);
-        log.info("id=" + filmId);
-        if (filmId <= 0) {
-            return null;
-        }
-        LocalDate releaseDate = filmRows.getDate(FilmConstant.RELEASE_DATE).toLocalDate();
-        return new Film(
-                filmRows.getLong(FilmConstant.ID),
-                filmRows.getString(FilmConstant.NAME),
-                filmRows.getString(FilmConstant.DESCRIPTION),
-                releaseDate,
-                filmRows.getInt(FilmConstant.DURATION),
-                MpaRating.builder()
-                        .id(filmRows.getLong(FilmConstant.MPA_RATING_ID))
-                        .name(filmRows.getString("mpa_name"))
-                        .build());
-    }
-
-
-    private Film mapRowToFilmWithDirector(ResultSet rs) throws SQLException {
-        var filmId = rs.getLong(ID);
-        log.info("id=" + filmId);
-        if (filmId <= 0) {
-            return null;
-        }
-        LocalDate releaseDate = rs.getDate(FilmConstant.RELEASE_DATE).toLocalDate();
-        Film film = new Film(
-                rs.getLong(FilmConstant.ID),
-                rs.getString(FilmConstant.NAME),
-                rs.getString(FilmConstant.DESCRIPTION),
-                releaseDate,
-                rs.getInt(FilmConstant.DURATION),
-                MpaRating.builder()
-                        .id(rs.getLong(FilmConstant.MPA_RATING_ID))
-                        .build());
-
-        var idDirector = rs.getLong(DirectorConstant.DIRECTOR_ID);
-        var nameDirector = rs.getString("dt_name");
-
-        if (idDirector > 0 && nameDirector != null) {
-            film.setDirectors(List.of(Director
-                    .builder()
-                    .id(idDirector)
-                    .name(nameDirector)
-                    .build()));
-        }
-
-        film.setGenres(genreStorage.findGenreByFilmId(film.getId()));
-        log.info("найден фильм: " + film);
-        return film;
-    }
-
-    @Override
-    public void deleteFilm(Film film) {
-        String sql = "delete from film_t where id = ? ";
-        jdbcTemplate.update(sql, film.getId());
-    }
-
-
 }

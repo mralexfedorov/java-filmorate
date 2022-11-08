@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import ru.yandex.practicum.filmorate.validation.After;
@@ -34,13 +35,9 @@ public class Film {
     @Positive(message = "Продолжительность фильма не может быть отрицательной.")
     private Integer duration;
 
-    private int rate;
-
     private List<Long> likes = new ArrayList<>();
 
-    private List<Genre> genres = new ArrayList<>();
-
-    private List<Director> directors = new ArrayList<>();
+    private List<Genre> genres;
 
     private MpaRating mpa;
 
@@ -52,14 +49,5 @@ public class Film {
         this.releaseDate = releaseDate;
         this.duration = duration;
         this.mpa = mpa;
-    }
-    public Film(Long id, String name, String description,
-                LocalDate releaseDate, Integer duration, int rate) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.releaseDate = releaseDate;
-        this.duration = duration;
-        this.rate = rate;
     }
 }
