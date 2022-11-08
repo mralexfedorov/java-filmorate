@@ -94,9 +94,7 @@ public class FilmController {
         log.info("запрос на получение общих с другом фильмов");
         return filmService.findFilmsByFriend(userId, friendId);
     }
-    
-    //`DELETE /films/{filmId}`
-    //Удаляет фильм по идентификатору.
+
     @DeleteMapping("/films/{filmId}")
     public void  deleteFilm(@PathVariable Long filmId) {
         filmService.deleteFilm(filmId);
