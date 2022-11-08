@@ -4,13 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.constant.FilmConstant;
 import ru.yandex.practicum.filmorate.dao.FilmDao;
 import ru.yandex.practicum.filmorate.dao.GenreDao;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.MpaRating;
 
 import java.sql.ResultSet;
@@ -144,6 +142,20 @@ public class FilmDaoImpl implements FilmDao {
                 .filter(el -> el != null)
                 .collect(Collectors.toList());
 
+    }
+
+    @Override
+    public Collection<Film> findFilmsByGenreAndYear(Long genreId, Integer year) {
+        log.info("поиск фильмов жанр=" + genreId + ", год=" + year);
+        String sql = "SELECT * FROM film_t f " +
+                     "WHERE ID IN (SELECT FILM_ID FROM film_genre_t " +
+                     "WHERE GENRE_ID = ?) " +
+                     "AND YEAR(RELEASE_DATE) = ? ";
+        log.info("обработка sql");
+        return jdbcTemplate.query(sql, (rs, rowNum) -> mapToFilm(rs), genreId, year)
+                .stream()
+                .filter(el -> el != null)
+                .collect(Collectors.toList());
     }
 
     private Film mapToFilm(ResultSet filmRows) throws SQLException {
