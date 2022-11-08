@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import ru.yandex.practicum.filmorate.validation.After;
@@ -39,9 +38,9 @@ public class Film {
 
     private List<Long> likes = new ArrayList<>();
 
-    private List<Genre> genres;
+    private List<Genre> genres = new ArrayList<>();
 
-    private List<Director> directors;
+    private List<Director> directors = new ArrayList<>();
 
     private MpaRating mpa;
 

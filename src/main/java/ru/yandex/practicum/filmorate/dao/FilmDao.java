@@ -23,4 +23,6 @@ public interface FilmDao {
     Collection<Film> getFilmsSearchByDirectorAndTitle(String substring);
 
     Collection<Film> findFilmsByFriend(Long userId, Long friendId);
+
+    void deleteFilm(Film film);
 }

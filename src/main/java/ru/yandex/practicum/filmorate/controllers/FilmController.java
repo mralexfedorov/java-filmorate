@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exceptions.DirectorNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.DirectorService;
 import ru.yandex.practicum.filmorate.service.FilmLikeService;
@@ -72,7 +71,8 @@ public class FilmController {
             return directorService.getDirectorSort(directorId, sort);
     }
     @GetMapping("/films/search")
-    Collection<Film> findFilmByTitleOrDirector(@RequestParam String query, @RequestParam String by) {
+    Collection<Film> findFilmByTitleOrDirector(@RequestParam String query,
+                                               @RequestParam String by) {
         log.info("началась обработка строки, query=" + query + ",by=" + by);
 
         List<String> words = new ArrayList<>(Arrays.asList(by.split(",")));
@@ -84,7 +84,8 @@ public class FilmController {
         }
         if (words.get(0).equalsIgnoreCase("director")) {
             return filmService.findFilmsByDirector(query);
-        } else return null;
+        }
+        else return null;
     }
     @GetMapping("/films/common")
     Collection<Film> findFilmsByFriends(@RequestParam Long userId,
