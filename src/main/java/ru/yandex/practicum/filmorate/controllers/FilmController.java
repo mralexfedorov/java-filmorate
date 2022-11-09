@@ -70,6 +70,7 @@ public class FilmController {
                                                @RequestParam("sortBy") String sort) {
             return directorService.getDirectorSort(directorId, sort);
     }
+
     @GetMapping("/films/search")
     Collection<Film> findFilmByTitleOrDirector(@RequestParam String query,
                                                @RequestParam String by) {
@@ -87,6 +88,7 @@ public class FilmController {
         }
         else return null;
     }
+    
     @GetMapping("/films/common")
     Collection<Film> findFilmsByFriends(@RequestParam Long userId,
                                         @RequestParam Long friendId) {
@@ -94,4 +96,8 @@ public class FilmController {
         return filmService.findFilmsByFriend(userId, friendId);
     }
 
+    @DeleteMapping("/films/{filmId}")
+    public void  deleteFilm(@PathVariable Long filmId) {
+        filmService.deleteFilm(filmId);
+    }
 }

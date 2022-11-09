@@ -9,8 +9,7 @@ import ru.yandex.practicum.filmorate.service.FriendshipService;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Positive;
-import java.util.*;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -67,6 +66,11 @@ public class UserController {
                                        @PathVariable("otherId") Long userId2) {
 
         return friendshipService.getCommonFriends(userId1, userId2);
+    }
+
+    @DeleteMapping("/users/{userId}")
+    public void  deleteUser(@PathVariable Long userId) {
+        userService.deleteUser(userId);
     }
 
 }

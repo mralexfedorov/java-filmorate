@@ -25,4 +25,5 @@ public interface FilmDao {
     Collection<Film> findFilmsByFriend(Long userId, Long friendId);
 
     void deleteFilm(Film film);
+
 }

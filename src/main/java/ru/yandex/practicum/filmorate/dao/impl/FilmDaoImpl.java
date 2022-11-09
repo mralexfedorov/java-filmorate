@@ -193,8 +193,7 @@ public class FilmDaoImpl implements FilmDao {
                         .name(filmRows.getString("mpa_name"))
                         .build());
     }
-
-
+    
     private Film mapRowToFilmWithDirector(ResultSet rs) throws SQLException {
         var filmId = rs.getLong(ID);
         log.info("id=" + filmId);
@@ -233,6 +232,5 @@ public class FilmDaoImpl implements FilmDao {
         String sql = "delete from film_t where id = ? ";
         jdbcTemplate.update(sql, film.getId());
     }
-
-
+    
 }
