@@ -4,6 +4,7 @@ package ru.yandex.practicum.filmorate.service;
 import ru.yandex.practicum.filmorate.model.Events;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface EventsService {
 //    Добавить возможность просмотра последних событий на платформе — добавление в друзья,
@@ -26,7 +27,6 @@ public interface EventsService {
     //просмотр добавления лайка
     void addPreviewLikeEvents(Long userId, Long entityId);
 
-    //update...
 
     //удаление просмотра
     void removeReviewEvents(Long userId, Long entityId);
@@ -38,6 +38,8 @@ public interface EventsService {
 
     //обновление просмотра
     void updateReviewEvents(Long userId, Long entityId);
+
+    void updateFriendEvents(Long userId, Long entityId);
 
     List<Events> getFeedUser(Long userId);
 }

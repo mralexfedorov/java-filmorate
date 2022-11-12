@@ -29,5 +29,7 @@ public interface EventsStorage {
     //обновление просмотра
     void updateReviewEvents(Long userId, Long entityId);
 
+    void updateFriendEvents(Long userId, Long entityId);
+
     List<Events> getFeedUser(Long userId);
 }

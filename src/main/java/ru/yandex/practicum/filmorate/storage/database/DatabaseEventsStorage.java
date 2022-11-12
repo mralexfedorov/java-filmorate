@@ -5,14 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.dao.EventsDao;
-import ru.yandex.practicum.filmorate.model.EventType;
-import ru.yandex.practicum.filmorate.model.Events;
-import ru.yandex.practicum.filmorate.model.Operation;
-import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.storage.EventsStorage;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 @Slf4j
@@ -21,7 +17,6 @@ import java.util.Optional;
 public class DatabaseEventsStorage implements EventsStorage {
 
     private final EventsDao eventsDao;
-
 
     @Override
     public void addInFriendEvents(Long userId, Long entityId) {
@@ -33,20 +28,21 @@ public class DatabaseEventsStorage implements EventsStorage {
     }
 
     @Override
-    public void addReviewEvents(Long userId, Long entityId) {
-        Events eventsReview = new Events(userId, entityId);
-        eventsReview.setEventType(EventType.REVIEW);
-        eventsReview.setOperation(Operation.ADD);
-        eventsDao.saveEvent(eventsReview);
-    }
-
-    @Override
     public void removeFriendEvents(Long userId, Long entityId) {
         Events eventsFriend = new Events(userId, entityId);
         eventsFriend.setEventType(EventType.FRIEND);
         eventsFriend.setOperation(Operation.REMOVE);
         eventsDao.saveEvent(eventsFriend);
     }
+
+    @Override
+    public void updateFriendEvents(Long userId, Long entityId) {
+        Events eventsFriend = new Events(userId, entityId);
+        eventsFriend.setEventType(EventType.FRIEND);
+        eventsFriend.setOperation(Operation.UPDATE);
+        eventsDao.saveEvent(eventsFriend);
+    }
+
 
     @Override
     public void removePreviewLikeEvents(Long userId, Long entityId) {
@@ -77,6 +73,14 @@ public class DatabaseEventsStorage implements EventsStorage {
         Events eventsReview = new Events(userId, entityId);
         eventsReview.setEventType(EventType.REVIEW);
         eventsReview.setOperation(Operation.REMOVE);
+        eventsDao.saveEvent(eventsReview);
+    }
+
+    @Override
+    public void addReviewEvents(Long userId, Long entityId) {
+        Events eventsReview = new Events(userId, entityId);
+        eventsReview.setEventType(EventType.REVIEW);
+        eventsReview.setOperation(Operation.ADD);
         eventsDao.saveEvent(eventsReview);
     }
 
