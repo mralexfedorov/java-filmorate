@@ -28,10 +28,20 @@ public class DatabaseEventsStorage implements EventsStorage {
     }
 
     @Override
+    public void addReviewEvents(Long userId, Long entityId) {
+        Events eventsReview = new Events(userId, entityId);
+        eventsReview.setEventType(EventType.REVIEW);
+        eventsReview.setOperation(Operation.ADD);
+        eventsReview.setTimestamp(java.sql.Timestamp.valueOf(LocalDateTime.now()).getTime());
+        eventsDao.saveEvent(eventsReview);
+    }
+
+    @Override
     public void removeFriendEvents(Long userId, Long entityId) {
         Events eventsFriend = new Events(userId, entityId);
         eventsFriend.setEventType(EventType.FRIEND);
         eventsFriend.setOperation(Operation.REMOVE);
+        eventsFriend.setTimestamp(java.sql.Timestamp.valueOf(LocalDateTime.now()).getTime());
         eventsDao.saveEvent(eventsFriend);
     }
 
@@ -73,15 +83,6 @@ public class DatabaseEventsStorage implements EventsStorage {
         Events eventsReview = new Events(userId, entityId);
         eventsReview.setEventType(EventType.REVIEW);
         eventsReview.setOperation(Operation.REMOVE);
-        eventsDao.saveEvent(eventsReview);
-    }
-
-    @Override
-    public void addReviewEvents(Long userId, Long entityId) {
-        Events eventsReview = new Events(userId, entityId);
-        eventsReview.setEventType(EventType.REVIEW);
-        eventsReview.setOperation(Operation.ADD);
-        eventsReview.setTimestamp(java.sql.Timestamp.valueOf(LocalDateTime.now()).getTime());
         eventsDao.saveEvent(eventsReview);
     }
 

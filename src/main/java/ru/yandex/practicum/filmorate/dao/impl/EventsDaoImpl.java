@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.dao.impl;
 
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -33,7 +32,7 @@ public class EventsDaoImpl implements EventsDao {
     @Override
     public List<Events> getFeedUser(Long userId) {
         String sql = "select * from events_t where user_id = ?";
-        return jdbcTemplate.query(sql, this::eventMapping, userId);
+       return jdbcTemplate.query(sql, this::eventMapping, userId);
     }
 
     @Override

@@ -23,13 +23,17 @@ public class DatabaseFriendshipStorage implements FriendshipStorage {
     @Override
     public Friendship createFriendship(Friendship friendship) {
         var saveFriend = friendshipDao.saveFriendship(friendship);
-        eventsService.addInFriendEvents(friendship.getUserId(), friendship.getId());
+        eventsService.addInFriendEvents(friendship.getUserId(), friendship.getFriendId());
         return saveFriend;
     }
 
     @Override
     public void deleteFriendship(Friendship friendship) {
-        friendshipDao.deleteFriendship(friendship);
+        var idFriend =  friendshipDao.deleteFriendship(friendship);
+        if (idFriend == null){
+            return;
+        }
+        eventsService.removeFriendEvents(friendship.getUserId(), idFriend);
     }
 
     @Override

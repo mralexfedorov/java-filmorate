@@ -41,12 +41,24 @@ public class FriendshipDaoImpl implements FriendshipDao {
     }
 
     @Override
-    public void deleteFriendship(Friendship friendship) {
+    public Long deleteFriendship(Friendship friendship) {
         friendshipStatusRevers(friendship, false);
+
+        String sqlToFriendshipTableId = "select FRIEND_ID  from FRIENDSHIP_T where user_id = ? and friend_id = ?";
+
+        var resultSet = jdbcTemplate.queryForRowSet(sqlToFriendshipTableId,
+                        friendship.getUserId(),
+                        friendship.getFriendId());
+        if(!resultSet.next()){
+          return null;
+        }
+        var idFriend = resultSet.getLong("FRIEND_ID");
 
         String sqlToFriendshipTable = "delete from friendship_t where user_id = ? and friend_id = ?";
         jdbcTemplate.update(sqlToFriendshipTable, friendship.getUserId(),
                 friendship.getFriendId());
+
+        return idFriend;
     }
 
     public Optional<Friendship> findFriendship(Friendship friendship) {

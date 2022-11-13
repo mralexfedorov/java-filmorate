@@ -23,10 +23,8 @@ import java.util.Optional;
 public class DatabaseReviewStorage implements ReviewStorage {
 
     private final ReviewDao reviewDao;
-
     private final UserService userService;
     private final FilmService filmService;
-
     private final EventsService eventsService;
 
     @Override

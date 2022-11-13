@@ -8,7 +8,7 @@ import java.util.Set;
 public interface FriendshipDao {
     Friendship saveFriendship(Friendship friendship);
 
-    void deleteFriendship(Friendship friendship);
+    Long deleteFriendship(Friendship friendship);
 
     Set<Long> findFriendIdsByUserId(Long userId);
 
