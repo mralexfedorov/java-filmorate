@@ -24,7 +24,8 @@ import java.util.Set;
 @Primary
 public class DatabaseUserStorage implements UserStorage {
     private final UserDao userDao;
-    private final FriendshipDao friendshipDao;
+//    private final FriendshipDao friendshipDao;
+//    private final EventsService eventsService;
 
     @Override
     public User createUser(User user) {
@@ -68,6 +69,9 @@ public class DatabaseUserStorage implements UserStorage {
     @Override
     public void deleteUser(Long id) {
         Optional<User> user = userDao.findUserById(id);
+        if(user.isEmpty()){
+            return;
+        }
         userDao.deleteUser(user.get());
 
     }

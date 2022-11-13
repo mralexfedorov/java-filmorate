@@ -50,6 +50,7 @@ public class DatabaseEventsStorage implements EventsStorage {
         Events eventsFriend = new Events(userId, entityId);
         eventsFriend.setEventType(EventType.FRIEND);
         eventsFriend.setOperation(Operation.UPDATE);
+        eventsFriend.setTimestamp(java.sql.Timestamp.valueOf(LocalDateTime.now()).getTime());
         eventsDao.saveEvent(eventsFriend);
     }
 
@@ -59,6 +60,7 @@ public class DatabaseEventsStorage implements EventsStorage {
         Events eventsLike = new Events(userId, entityId);
         eventsLike.setEventType(EventType.LIKE);
         eventsLike.setOperation(Operation.REMOVE);
+        eventsLike.setTimestamp(java.sql.Timestamp.valueOf(LocalDateTime.now()).getTime());
         eventsDao.saveEvent(eventsLike);
     }
 
@@ -67,6 +69,7 @@ public class DatabaseEventsStorage implements EventsStorage {
         Events eventsLike = new Events(userId, entityId);
         eventsLike.setEventType(EventType.LIKE);
         eventsLike.setOperation(Operation.ADD);
+        eventsLike.setTimestamp(java.sql.Timestamp.valueOf(LocalDateTime.now()).getTime());
         eventsDao.saveEvent(eventsLike);
     }
 
@@ -75,6 +78,7 @@ public class DatabaseEventsStorage implements EventsStorage {
         Events eventsLike = new Events(userId, entityId);
         eventsLike.setEventType(EventType.LIKE);
         eventsLike.setOperation(Operation.UPDATE);
+        eventsLike.setTimestamp(java.sql.Timestamp.valueOf(LocalDateTime.now()).getTime());
         eventsDao.saveEvent(eventsLike);
     }
 
@@ -83,6 +87,7 @@ public class DatabaseEventsStorage implements EventsStorage {
         Events eventsReview = new Events(userId, entityId);
         eventsReview.setEventType(EventType.REVIEW);
         eventsReview.setOperation(Operation.REMOVE);
+        eventsReview.setTimestamp(java.sql.Timestamp.valueOf(LocalDateTime.now()).getTime());
         eventsDao.saveEvent(eventsReview);
     }
 
@@ -91,6 +96,7 @@ public class DatabaseEventsStorage implements EventsStorage {
         Events eventsReview = new Events(userId, entityId);
         eventsReview.setEventType(EventType.REVIEW);
         eventsReview.setOperation(Operation.UPDATE);
+        eventsReview.setTimestamp(java.sql.Timestamp.valueOf(LocalDateTime.now()).getTime());
         eventsDao.saveEvent(eventsReview);
     }
 
