@@ -14,6 +14,7 @@ import ru.yandex.practicum.filmorate.model.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -39,17 +40,16 @@ public class EventsDaoImpl implements EventsDao {
     public void saveEvent(Events events) {
         Map<String, Object> keys = new SimpleJdbcInsert(this.jdbcTemplate)
                 .withTableName(EVENTS_TABLE)
-                .usingColumns(TIME_STAMP, USER_ID, EVENTTYPE, OPERATION, EVENT_ID)
-                .usingGeneratedKeyColumns(ENTITY_ID)
-                .executeAndReturnKeyHolder(Map.of(TIME_STAMP, events.getTimestamp(),
+                .usingColumns(TIME_STAMP, USER_ID, EVENTTYPE, OPERATION, ENTITY_ID)
+                .usingGeneratedKeyColumns(EVENT_ID)
+                .executeAndReturnKeyHolder(Map.of(TIME_STAMP, new Timestamp(events.getTimestamp()),
                         USER_ID, events.getUserId(),
                         EVENTTYPE, events.getEventType(),
                         OPERATION, events.getOperation(),
-                        ENTITY_ID, events.getEventId()))
+                        ENTITY_ID, events.getEntityId()))
                 .getKeys();
         events.setEventId((Long) keys.get(EVENT_ID));
-        jdbcTemplate.update("insert into events_t (time_stamp, user_id, event_type, operation, " +
-                "entity_id, values (?,?,?,?,?)");
+
     }
 
 

@@ -39,7 +39,6 @@ public class DatabaseFilmLikeStorage implements FilmLikeStorage {
     public void deleteLike(FilmLike filmLike) {
         filmStorage.findFilm(filmLike.getFilmId());
         filmLikeDao.deleteLike(filmLike);
-        eventsService.removePreviewLikeEvents(filmLike.getUserId(), filmLike.getId());
         log.debug("Ваш лайк удален.");
     }
 
