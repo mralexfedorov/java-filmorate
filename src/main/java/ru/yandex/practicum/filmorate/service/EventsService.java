@@ -4,7 +4,6 @@ package ru.yandex.practicum.filmorate.service;
 import ru.yandex.practicum.filmorate.model.Events;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface EventsService {
 //    Добавить возможность просмотра последних событий на платформе — добавление в друзья,

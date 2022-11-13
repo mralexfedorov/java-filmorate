@@ -1,23 +1,17 @@
 package ru.yandex.practicum.filmorate.dao.impl;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.constant.EventsConstant;
 import ru.yandex.practicum.filmorate.dao.EventsDao;
 import ru.yandex.practicum.filmorate.model.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static ru.yandex.practicum.filmorate.constant.EventsConstant.*;
 import static ru.yandex.practicum.filmorate.constant.EventsConstant.USER_ID;
