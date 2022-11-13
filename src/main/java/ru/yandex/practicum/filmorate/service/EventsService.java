@@ -27,7 +27,6 @@ public interface EventsService {
     //просмотр добавления лайка
     void addPreviewLikeEvents(Long userId, Long entityId);
 
-
     //удаление просмотра
     void removeReviewEvents(Long userId, Long entityId);
 

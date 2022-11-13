@@ -39,9 +39,11 @@ public class DatabaseReviewStorage implements ReviewStorage {
 
     @Override
     public Review updateReview(Review review) {
-        findReview(review.getId());
+        var reviewFromDb = findReview(review.getId());
 
         review = reviewDao.updateReviewToPositive(review);
+
+        eventsService.updateReviewEvents(reviewFromDb.getUserId(), review.getId());
 
         log.debug("Отзыв {} обновлен.", review.getId());
         return review;
@@ -60,8 +62,9 @@ public class DatabaseReviewStorage implements ReviewStorage {
 
     @Override
     public void deleteReview(Long id) {
-        findReview(id);
+        var review = findReview(id);
         reviewDao.deleteReviewById(id);
+        eventsService.removeReviewEvents(review.getUserId(), review.getId());
     }
 
     @Override
@@ -81,7 +84,8 @@ public class DatabaseReviewStorage implements ReviewStorage {
 
         review.setUseful(review.getUseful() + 1);
 
-        return reviewDao.updateReviewUseful(review);
+        review =  reviewDao.updateReviewUseful(review);
+        return review;
     }
 
     @Override
@@ -92,7 +96,8 @@ public class DatabaseReviewStorage implements ReviewStorage {
 
         review.setUseful(review.getUseful() - 1);
 
-        return reviewDao.updateReviewUseful(review);
+        review =  reviewDao.updateReviewUseful(review);
+        return review;
     }
 
 }
