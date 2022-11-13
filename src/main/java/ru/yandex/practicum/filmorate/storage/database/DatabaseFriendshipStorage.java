@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.dao.FriendshipDao;
 import ru.yandex.practicum.filmorate.model.Friendship;
+import ru.yandex.practicum.filmorate.service.EventsService;
 import ru.yandex.practicum.filmorate.storage.FriendshipStorage;
 
 import java.util.Set;
@@ -17,10 +18,13 @@ import java.util.Set;
 public class DatabaseFriendshipStorage implements FriendshipStorage {
 
     private final FriendshipDao friendshipDao;
+    private final EventsService eventsService;
 
     @Override
     public Friendship createFriendship(Friendship friendship) {
-        return friendshipDao.saveFriendship(friendship);
+        var saveFriend = friendshipDao.saveFriendship(friendship);
+        eventsService.addInFriendEvents(friendship.getUserId(), friendship.getId());
+        return saveFriend;
     }
 
     @Override
