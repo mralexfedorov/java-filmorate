@@ -53,6 +53,7 @@ public class FilmServiceImpl implements FilmService {
         return filmStorage.findFilmsByFriend(userId, friendId);
     }
 
+    @Override
     public void deleteFilm(Long filmId) {
         filmStorage.deleteFilm(filmId);
     }

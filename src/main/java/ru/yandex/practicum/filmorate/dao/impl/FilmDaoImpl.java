@@ -158,6 +158,33 @@ public class FilmDaoImpl implements FilmDao {
 
     }
 
+    @Override
+    public Collection<Film> findFilmsByGenreAndYear(Long genreId, Integer year) {
+        String sql = "SELECT f.*, mpa.NAME AS mpa_name FROM film_t f " +
+                     "JOIN MPA_RATING_T mpa on mpa.ID = F.MPA_RATING_ID " +
+                     "WHERE f.ID IN (SELECT FILM_ID FROM film_genre_t " +
+                     "WHERE GENRE_ID = ?) " +
+                     "AND YEAR(RELEASE_DATE) = ? ";
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> mapToFilmWithMpaName(rs), genreId, year)
+                .stream()
+                .filter(el -> el != null)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Collection<Film> getFilmsWithUserLikes(Long userId) {
+        String sql = "SELECT f.*, mpa.NAME AS mpa_name FROM film_t f " +
+                "JOIN MPA_RATING_T mpa on mpa.ID = F.MPA_RATING_ID " +
+                "WHERE f.ID IN (SELECT FILM_ID FROM FILM_LIKE_T " +
+                "WHERE USER_ID = ?) ";
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> mapToFilmWithMpaName(rs), userId)
+                .stream()
+                .filter(el -> el != null)
+                .collect(Collectors.toList());
+    }
+
     private Film mapToFilm(ResultSet filmRows) throws SQLException {
         var filmId = filmRows.getLong(ID);
         if (filmId <= 0) {
@@ -182,7 +209,7 @@ public class FilmDaoImpl implements FilmDao {
             return null;
         }
         LocalDate releaseDate = filmRows.getDate(FilmConstant.RELEASE_DATE).toLocalDate();
-        return new Film(
+        Film film = new Film(
                 filmRows.getLong(FilmConstant.ID),
                 filmRows.getString(FilmConstant.NAME),
                 filmRows.getString(FilmConstant.DESCRIPTION),
@@ -192,6 +219,10 @@ public class FilmDaoImpl implements FilmDao {
                         .id(filmRows.getLong(FilmConstant.MPA_RATING_ID))
                         .name(filmRows.getString("mpa_name"))
                         .build());
+
+        film.setGenres(genreStorage.findGenreByFilmId(film.getId()));
+
+        return film;
     }
     
     private Film mapRowToFilmWithDirector(ResultSet rs) throws SQLException {

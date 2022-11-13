@@ -92,6 +92,11 @@ public class DatabaseFilmStorage implements FilmStorage {
     }
 
     @Override
+    public Collection<Film> findFilmsByGenreAndYear(Long genreId, Integer year) {
+        return filmDao.findFilmsByGenreAndYear(genreId, year);
+    }
+
+    @Override
     public Collection<Film> getFilmsSearchByDirectorAndTitle(String substring) {
         return filmDao.getFilmsSearchByDirectorAndTitle(substring);
     }
@@ -138,6 +143,11 @@ public class DatabaseFilmStorage implements FilmStorage {
                     }
                 });
         return new ArrayList<>(films);
+    }
+
+    @Override
+    public Collection<Film> getFilmsWithUserLikes(Long userId) {
+        return filmDao.getFilmsWithUserLikes(userId);
     }
 
 }

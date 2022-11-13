@@ -23,6 +23,10 @@ public interface FilmStorage {
 
     Collection<Film> findFilmsByFriend(Long userId, Long friendId);
 
+    Collection<Film> findFilmsByGenreAndYear(Long genreId, Integer year);
+
+    Collection<Film> getFilmsWithUserLikes(Long userId);
+
     void deleteFilm(Long id);
 
 }
