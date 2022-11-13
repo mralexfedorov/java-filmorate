@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.dao.FilmDao;
 import ru.yandex.practicum.filmorate.dao.GenreDao;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.MpaRating;
+import ru.yandex.practicum.filmorate.storage.GenreStorage;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,6 +28,8 @@ import static ru.yandex.practicum.filmorate.constant.FilmConstant.*;
 public class FilmDaoImpl implements FilmDao {
     private final JdbcTemplate jdbcTemplate;
     GenreDao genreDao;
+    GenreStorage genreStorage;
+
     @Override
     public Film saveFilm(Film film) {
         Map<String, Object> keys = new SimpleJdbcInsert(this.jdbcTemplate)
@@ -166,7 +169,7 @@ public class FilmDaoImpl implements FilmDao {
                      "nuf (FILM_ID, USER_ID) AS " +
                      "(SELECT FILM_ID, USER_ID FROM FILM_LIKE_T WHERE USER_ID != ?), " +
                      "su (USER_ID) AS " +
-                     "(SELECT nuf.USER_ID,\n" +
+                     "(SELECT nuf.USER_ID, " +
                      "COUNT(CASE WHEN nuf.FILM_ID IS NULL THEN 0 " +
                      "ELSE 1 " +
                      "END) AS count " +
@@ -210,7 +213,7 @@ public class FilmDaoImpl implements FilmDao {
             return null;
         }
         LocalDate releaseDate = filmRows.getDate(FilmConstant.RELEASE_DATE).toLocalDate();
-        return new Film(
+        Film film = new Film(
                 filmRows.getLong(FilmConstant.ID),
                 filmRows.getString(FilmConstant.NAME),
                 filmRows.getString(FilmConstant.DESCRIPTION),
@@ -220,6 +223,10 @@ public class FilmDaoImpl implements FilmDao {
                         .id(filmRows.getLong(FilmConstant.MPA_RATING_ID))
                         .name(filmRows.getString("mpa_name"))
                         .build());
+
+        film.setGenres(genreStorage.findGenreByFilmId(film.getId()));
+
+        return film;
     }
 
     public void deleteFilm(Film film) {
