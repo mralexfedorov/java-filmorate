@@ -78,7 +78,8 @@ public class FilmController {
     }
 
     @GetMapping("/films/search")
-    Collection<Film> findFilmByTitleOrDirector(@RequestParam String query, @RequestParam String by) {
+    Collection<Film> findFilmByTitleOrDirector(@RequestParam String query,
+                                               @RequestParam String by) {
         log.info("началась обработка строки, query=" + query + ",by=" + by);
 
         List<String> words = new ArrayList<>(Arrays.asList(by.split(",")));
@@ -90,7 +91,8 @@ public class FilmController {
         }
         if (words.get(0).equalsIgnoreCase("director")) {
             return filmService.findFilmsByDirector(query);
-        } else return null;
+        }
+        else return null;
     }
     
     @GetMapping("/films/common")
