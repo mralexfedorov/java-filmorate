@@ -10,8 +10,7 @@ import ru.yandex.practicum.filmorate.storage.FilmLikeStorage;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -53,7 +52,7 @@ public class FilmLikeServiceImpl implements FilmLikeService {
                     List<FilmLike> likes = filmLikeStorage.getFilmLikes(el.getId());
                     if (!CollectionUtils.isEmpty(likes)) {
                         el.setLikes(likes.stream()
-                                .map(like -> like.getFilmId())
+                                .map(FilmLike::getFilmId)
                                 .collect(Collectors.toList()));
                     }
                 })
@@ -62,4 +61,26 @@ public class FilmLikeServiceImpl implements FilmLikeService {
                 collect(Collectors.toList());
     }
 
+    @Override
+    public List<Film> getMostPopularByGenreAndYear(Integer count, Long genreId, Integer year) {
+        Comparator<Film> comparator = Comparator.comparingInt((Film film) -> film.getLikes().size());
+        return filmStorage.findFilmsByGenreAndYear(genreId, year)
+                .stream()
+                .peek(el -> {
+                    List<FilmLike> likes = filmLikeStorage.getFilmLikes(el.getId());
+                    if (!CollectionUtils.isEmpty(likes)) {
+                        el.setLikes(likes.stream()
+                                .map(FilmLike::getFilmId)
+                                .collect(Collectors.toList()));
+                    }
+                })
+                .sorted(comparator.reversed())
+                .limit(count).
+                collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Film> getRecommendations(Long userId) {
+        return filmStorage.getFilmsWithRecommendations(userId);
+    }
 }

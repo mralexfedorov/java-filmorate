@@ -6,14 +6,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Events;
-import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.EventsService;
+import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.FilmLikeService;
 import ru.yandex.practicum.filmorate.service.FriendshipService;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Positive;
-import java.util.*;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -24,6 +25,7 @@ public class UserController {
     private final UserService userService;
     private final FriendshipService friendshipService;
     private final EventsService eventsService;
+    private final FilmLikeService filmLikeService;
 
     @PostMapping("/users")
     public User createUser(@RequestBody @Valid User user) {
@@ -73,19 +75,20 @@ public class UserController {
         return friendshipService.getCommonFriends(userId1, userId2);
     }
 
-    //DELETE /users/{userId}`
-    //Удаляет пользователя по идентификатору.
     @DeleteMapping("/users/{userId}")
     public void  deleteUser(@PathVariable Long userId) {
         userService.deleteUser(userId);
     }
 
-    //GET /users/{id}/feed
-    //Возвращает ленту событий пользователя.
-
     @GetMapping("/users/{id}/feed")
     public List<Events> getFeedUser(@PathVariable("id") Long userId) {
         return eventsService.getFeedUser(userId);
+    }
+
+    @GetMapping("/users/{id}/recommendations")
+    public List<Film> getRecommendations(@PathVariable("id") Long userId) {
+
+        return filmLikeService.getRecommendations(userId);
     }
 
 }
