@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.dao.FilmDao;
 import ru.yandex.practicum.filmorate.dao.GenreDao;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.MpaRating;
+import ru.yandex.practicum.filmorate.storage.GenreStorage;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,6 +28,8 @@ import static ru.yandex.practicum.filmorate.constant.FilmConstant.*;
 public class FilmDaoImpl implements FilmDao {
     private final JdbcTemplate jdbcTemplate;
     GenreDao genreDao;
+    GenreStorage genreStorage;
+
     @Override
     public Film saveFilm(Film film) {
         Map<String, Object> keys = new SimpleJdbcInsert(this.jdbcTemplate)
@@ -146,13 +149,13 @@ public class FilmDaoImpl implements FilmDao {
 
     @Override
     public Collection<Film> findFilmsByGenreAndYear(Long genreId, Integer year) {
-        log.info("поиск фильмов жанр=" + genreId + ", год=" + year);
-        String sql = "SELECT * FROM film_t f " +
-                     "WHERE ID IN (SELECT FILM_ID FROM film_genre_t " +
+        String sql = "SELECT f.*, mpa.NAME AS mpa_name FROM film_t f " +
+                     "JOIN MPA_RATING_T mpa on mpa.ID = F.MPA_RATING_ID " +
+                     "WHERE f.ID IN (SELECT FILM_ID FROM film_genre_t " +
                      "WHERE GENRE_ID = ?) " +
                      "AND YEAR(RELEASE_DATE) = ? ";
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> mapToFilm(rs), genreId, year)
+        return jdbcTemplate.query(sql, (rs, rowNum) -> mapToFilmWithMpaName(rs), genreId, year)
                 .stream()
                 .filter(el -> el != null)
                 .collect(Collectors.toList());
@@ -160,11 +163,12 @@ public class FilmDaoImpl implements FilmDao {
 
     @Override
     public Collection<Film> getFilmsWithUserLikes(Long userId) {
-        String sql = "SELECT * FROM film_t f " +
-                "WHERE ID IN (SELECT FILM_ID FROM FILM_LIKE_T " +
+        String sql = "SELECT f.*, mpa.NAME AS mpa_name FROM film_t f " +
+                "JOIN MPA_RATING_T mpa on mpa.ID = F.MPA_RATING_ID " +
+                "WHERE f.ID IN (SELECT FILM_ID FROM FILM_LIKE_T " +
                 "WHERE USER_ID = ?) ";
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> mapToFilm(rs), userId)
+        return jdbcTemplate.query(sql, (rs, rowNum) -> mapToFilmWithMpaName(rs), userId)
                 .stream()
                 .filter(el -> el != null)
                 .collect(Collectors.toList());
@@ -193,7 +197,7 @@ public class FilmDaoImpl implements FilmDao {
             return null;
         }
         LocalDate releaseDate = filmRows.getDate(FilmConstant.RELEASE_DATE).toLocalDate();
-        return new Film(
+        Film film = new Film(
                 filmRows.getLong(FilmConstant.ID),
                 filmRows.getString(FilmConstant.NAME),
                 filmRows.getString(FilmConstant.DESCRIPTION),
@@ -203,6 +207,10 @@ public class FilmDaoImpl implements FilmDao {
                         .id(filmRows.getLong(FilmConstant.MPA_RATING_ID))
                         .name(filmRows.getString("mpa_name"))
                         .build());
+
+        film.setGenres(genreStorage.findGenreByFilmId(film.getId()));
+
+        return film;
     }
 
     public void deleteFilm(Film film) {
