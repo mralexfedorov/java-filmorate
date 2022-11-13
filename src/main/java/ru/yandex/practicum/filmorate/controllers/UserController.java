@@ -1,9 +1,12 @@
 package ru.yandex.practicum.filmorate.controllers;
 
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.model.Events;
+import ru.yandex.practicum.filmorate.service.EventsService;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.FilmLikeService;
@@ -21,6 +24,7 @@ public class UserController {
 
     private final UserService userService;
     private final FriendshipService friendshipService;
+    private final EventsService eventsService;
     private final FilmLikeService filmLikeService;
 
     @PostMapping("/users")
@@ -76,9 +80,15 @@ public class UserController {
         userService.deleteUser(userId);
     }
 
+    @GetMapping("/users/{id}/feed")
+    public List<Events> getFeedUser(@PathVariable("id") Long userId) {
+        return eventsService.getFeedUser(userId);
+    }
+
     @GetMapping("/users/{id}/recommendations")
     public List<Film> getRecommendations(@PathVariable("id") Long userId) {
 
         return filmLikeService.getRecommendations(userId);
     }
+
 }

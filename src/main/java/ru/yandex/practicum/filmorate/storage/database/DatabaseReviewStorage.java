@@ -6,7 +6,9 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.dao.ReviewDao;
 import ru.yandex.practicum.filmorate.exceptions.ReviewNotFoundException;
+import ru.yandex.practicum.filmorate.model.Events;
 import ru.yandex.practicum.filmorate.model.Review;
+import ru.yandex.practicum.filmorate.service.EventsService;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.ReviewStorage;
@@ -25,11 +27,14 @@ public class DatabaseReviewStorage implements ReviewStorage {
     private final UserService userService;
     private final FilmService filmService;
 
+    private final EventsService eventsService;
+
     @Override
     public Review createReview(Review review) {
         userService.getUser(review.getUserId());
         filmService.getFilm(review.getFilmId());
         reviewDao.saveReview(review);
+        eventsService.addReviewEvents(review.getUserId(), review.getId());
         log.debug("Отзыв {} создан.", review.getId());
         return review;
     }
