@@ -159,12 +159,29 @@ public class FilmDaoImpl implements FilmDao {
     }
 
     @Override
-    public Collection<Film> getFilmsWithUserLikes(Long userId) {
-        String sql = "SELECT * FROM film_t f " +
-                "WHERE ID IN (SELECT FILM_ID FROM FILM_LIKE_T " +
-                "WHERE USER_ID = ?) ";
+    public List<Film> getFilmsWithRecommendations(Long userId) {
+        String sql = "WITH " +
+                     "uf (FILM_ID) AS " +
+                     "(SELECT FILM_ID FROM FILM_LIKE_T WHERE USER_ID = ?), " +
+                     "nuf (FILM_ID, USER_ID) AS " +
+                     "(SELECT FILM_ID, USER_ID FROM FILM_LIKE_T WHERE USER_ID != ?), " +
+                     "su (USER_ID) AS " +
+                     "(SELECT nuf.USER_ID,\n" +
+                     "COUNT(CASE WHEN nuf.FILM_ID IS NULL THEN 0 " +
+                     "ELSE 1 " +
+                     "END) AS count " +
+                     "FROM uf " +
+                     "JOIN nuf " +
+                     "ON uf.FILM_ID = nuf.FILM_ID " +
+                     "GROUP BY nuf.USER_ID " +
+                     "ORDER BY count DESC " +
+                     "LIMIT 1) " +
+                     "SELECT f.*, mpa.NAME AS mpa_name FROM film_t f " +
+                     "JOIN MPA_RATING_T mpa on mpa.ID = F.MPA_RATING_ID " +
+                     "WHERE f.ID IN (SELECT nuf.FILM_ID FROM nuf) " +
+                     "AND f.ID NOT IN (SELECT uf.FILM_ID FROM uf) ";
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> mapToFilm(rs), userId)
+        return jdbcTemplate.query(sql, (rs, rowNum) -> mapToFilmWithMpaName(rs), userId, userId)
                 .stream()
                 .filter(el -> el != null)
                 .collect(Collectors.toList());
