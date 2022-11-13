@@ -151,8 +151,20 @@ public class FilmDaoImpl implements FilmDao {
                      "WHERE ID IN (SELECT FILM_ID FROM film_genre_t " +
                      "WHERE GENRE_ID = ?) " +
                      "AND YEAR(RELEASE_DATE) = ? ";
-        log.info("обработка sql");
+
         return jdbcTemplate.query(sql, (rs, rowNum) -> mapToFilm(rs), genreId, year)
+                .stream()
+                .filter(el -> el != null)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Collection<Film> getFilmsWithUserLikes(Long userId) {
+        String sql = "SELECT * FROM film_t f " +
+                "WHERE ID IN (SELECT FILM_ID FROM FILM_LIKE_T " +
+                "WHERE USER_ID = ?) ";
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> mapToFilm(rs), userId)
                 .stream()
                 .filter(el -> el != null)
                 .collect(Collectors.toList());

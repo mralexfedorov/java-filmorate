@@ -145,4 +145,9 @@ public class DatabaseFilmStorage implements FilmStorage {
         return new ArrayList<>(films);
     }
 
+    @Override
+    public Collection<Film> getFilmsWithUserLikes(Long userId) {
+        return filmDao.getFilmsWithUserLikes(userId);
+    }
+
 }

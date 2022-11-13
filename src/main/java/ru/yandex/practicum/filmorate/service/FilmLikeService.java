@@ -13,4 +13,6 @@ public interface FilmLikeService {
     List<Film> getMostPopular(Integer count);
 
     List<Film> getMostPopularByGenreAndYear(Integer count, Long genreId, Integer year);
+
+    List<Film> getRecommendations(Long userId);
 }
