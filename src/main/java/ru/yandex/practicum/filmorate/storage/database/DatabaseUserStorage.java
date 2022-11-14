@@ -4,14 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.dao.FriendshipDao;
 import ru.yandex.practicum.filmorate.dao.UserDao;
 import ru.yandex.practicum.filmorate.exceptions.UserNotFoundException;
-import ru.yandex.practicum.filmorate.model.Friendship;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.EventsService;
-import ru.yandex.practicum.filmorate.service.FriendshipService;
-import ru.yandex.practicum.filmorate.service.impl.FriendshipServiceImpl;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.List;
