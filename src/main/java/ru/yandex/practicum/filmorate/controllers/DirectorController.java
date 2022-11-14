@@ -14,32 +14,38 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Validated
+@RequestMapping("/directors")
 public class DirectorController {
 
     private final DirectorService directorService;
 
-    @GetMapping("/directors")
+    @GetMapping()
     public List<Director> findAllDirectors() {
+        log.info("получение всех режиссеров");
         return directorService.findAllDirectors();
     }
 
-    @GetMapping("/directors/{id}")
+    @GetMapping("/{id}")
     public Director getDirector(@PathVariable("id") Long id) {
+        log.info("запрос на получение режиссера:" + id);
         return directorService.getDirector(id);
     }
 
-    @PostMapping("/directors")
+    @PostMapping()
     public Director createDirector(@Valid @RequestBody Director director) {
+        log.info("запрос на создание режиссера:" + director);
         return directorService.createDirector(director);
     }
 
-    @PutMapping("/directors")
+    @PutMapping()
     public Director updateDirector(@RequestBody Director director) {
+        log.info("запрос на изменение режиссера:" + director);
         return directorService.updateDirector(director);
     }
 
-    @DeleteMapping("/directors/{id}")
-    public void deleteLike(@PathVariable("id") Long id) {
+    @DeleteMapping("/{id}")
+    public void deleteDirector(@PathVariable("id") Long id) {
+        log.info("запрос на удаление режиссера:" + id);
         directorService.deleteDirector(id);
     }
 }

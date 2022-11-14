@@ -53,8 +53,7 @@ public class DatabaseReviewStorage implements ReviewStorage {
     public Review findReview(Long id) {
         Optional<Review> reviewOpt = reviewDao.findReviewById(id);
         if (reviewOpt.isPresent()) {
-            var review = reviewOpt.get();
-            return review;
+            return reviewOpt.get();
         }
         throw new ReviewNotFoundException(
                 String.format("Отзыв с таким id %s не существует", id));

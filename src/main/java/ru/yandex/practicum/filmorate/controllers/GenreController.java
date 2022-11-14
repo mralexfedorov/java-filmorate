@@ -13,17 +13,20 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Validated
+@RequestMapping("/genres")
 public class GenreController {
 
     private final GenreService genreService;
 
-    @GetMapping("/genres")
+    @GetMapping()
     public List<Genre> findAllGenres() {
+        log.info("запрос на получение жанров");
         return genreService.findAllGenres();
     }
 
-    @GetMapping("/genres/{id}")
+    @GetMapping("/{id}")
     public Genre getGenre(@PathVariable("id") Long genreId) {
+        log.info("запрос на получение жанра:" + genreId);
         return genreService.getGenre(genreId);
     }
     

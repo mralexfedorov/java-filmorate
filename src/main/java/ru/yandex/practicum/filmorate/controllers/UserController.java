@@ -20,6 +20,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Validated
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
@@ -27,67 +28,73 @@ public class UserController {
     private final EventsService eventsService;
     private final FilmLikeService filmLikeService;
 
-    @PostMapping("/users")
+    @PostMapping()
     public User createUser(@RequestBody @Valid User user) {
+        log.info("получен запрос на создание пользователя:" + user);
         return userService.createUser(user);
     }
 
-    @PutMapping("/users")
+    @PutMapping()
     public User updateUser(@RequestBody User user) {
+        log.info("получен запрос на обновление пользователя:" + user);
         return userService.updateUser(user);
     }
 
-    @GetMapping("/users")
+    @GetMapping()
     public List<User> findAllUsers() {
+        log.info("получен запрос на получение всех пользователей");
         return userService.findAllUsers();
     }
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/{id}")
     public User getUser(@PathVariable("id") Long userId) {
+        log.info("запрос на получение пользователя:" + userId);
         return userService.getUser(userId);
     }
 
-    @PutMapping("/users/{id}/friends/{friendId}")
+    @PutMapping("/{id}/friends/{friendId}")
     public void addFriend(@PathVariable("id") Long userId,
                           @PathVariable("friendId") Long friendId) {
-
+        log.info("запрос на добавление друга:" + friendId + "пользователю:" + userId);
         friendshipService.addFriend(userId, friendId);
     }
     
-    @DeleteMapping("/users/{id}/friends/{friendId}")
+    @DeleteMapping("/{id}/friends/{friendId}")
     public void deleteFriend(@PathVariable("id") Long userId,
                              @PathVariable("friendId") Long friendId) {
-
+        log.info("запрос на удаление друга:" + friendId + " у пользователя:" + userId);
         friendshipService.deleteFriend(userId, friendId);
     }
 
 
-    @GetMapping("/users/{id}/friends")
+    @GetMapping("/{id}/friends")
     public List<User> getFriends(@PathVariable("id") Long userId) {
-
+        log.info("запрос на получение друзей пользователя:" + userId);
         return friendshipService.getFriends(userId);
     }
 
-    @GetMapping("/users/{id}/friends/common/{otherId}")
+    @GetMapping("/{id}/friends/common/{otherId}")
     public List<User> getCommonFriends(@PathVariable("id") Long userId1,
                                        @PathVariable("otherId") Long userId2) {
-
+        log.info("запрос на получение общих друзей пользователя:" + userId1 + "и пользователя:" + userId2);
         return friendshipService.getCommonFriends(userId1, userId2);
     }
 
-    @DeleteMapping("/users/{userId}")
+    @DeleteMapping("/{userId}")
     public void  deleteUser(@PathVariable Long userId) {
+        log.info("запрос на удаление пользователя:" + userId);
         userService.deleteUser(userId);
     }
 
-    @GetMapping("/users/{id}/feed")
+    @GetMapping("/{id}/feed")
     public List<Events> getFeedUser(@PathVariable("id") Long userId) {
+        log.info("получение ленты событий пользователя:" + userId);
         return eventsService.getFeedUser(userId);
     }
 
-    @GetMapping("/users/{id}/recommendations")
+    @GetMapping("/{id}/recommendations")
     public List<Film> getRecommendations(@PathVariable("id") Long userId) {
-
+        log.info("запрос на получение рекомендаций по фильмам:" + userId);
         return filmLikeService.getRecommendations(userId);
     }
 

@@ -19,6 +19,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Validated
+@RequestMapping("/films")
 public class FilmController {
 
     private final FilmService filmService;
@@ -26,44 +27,51 @@ public class FilmController {
     private final DirectorService directorService;
 
 
-    @PostMapping("/films")
+    @PostMapping()
     public Film createFilm(@Valid @RequestBody Film film) {
+        log.info("запрос на создание фильма:" + film);
         return filmService.createFilm(film);
     }
 
-    @PutMapping("/films")
+    @PutMapping()
     public Film updateFilm(@RequestBody Film film) {
+        log.info("запрос на обновление фильма:" + film);
         return filmService.updateFilm(film);
     }
 
-    @GetMapping("/films/{id}")
+    @GetMapping("/{id}")
     public Film getFilm(@PathVariable("id") Long filmId) {
+        log.info("запрос на получение фильма по идентификатору:" + filmId);
         return filmService.getFilm(filmId);
     }
 
-    @GetMapping("/films")
+    @GetMapping()
     public List<Film> findAllFilms() {
+        log.info("запрос на получение фильмов");
         return filmService.findAllFilms();
     }
 
-    @PutMapping("/films/{id}/like/{userId}")
+    @PutMapping("/{id}/like/{userId}")
     public void addLike(@PathVariable("id") Long filmId,
                         @PathVariable("userId") Long userId) {
+        log.info("пользователь:" + userId + "поставил лайк фильму:" + filmId);
         filmLikeService.addLike(filmId, userId);
     }
 
 
-    @DeleteMapping("/films/{id}/like/{userId}")
+    @DeleteMapping("/{id}/like/{userId}")
     public void deleteLike(@PathVariable("id") Long filmId,
                            @PathVariable("userId") Long userId) {
+        log.info("пользователь:" + userId + "удалил лайк фильму:" + filmId);
         filmLikeService.deleteLike(filmId, userId);
     }
 
 
-    @GetMapping("/films/popular")
+    @GetMapping("/popular")
     public List<Film> getMostPopular(@RequestParam(name = "count", required = false) Integer count,
                                      @RequestParam(name = "genreId", required = false) Long genreId,
                                      @RequestParam(name = "year", required = false) Integer year) {
+        log.info("запрос на получение популярных фильмов");
         if (genreId != null || year != null) {
             return filmLikeService.getMostPopularByGenreAndYear(count, genreId, year);
         } else {
@@ -71,13 +79,14 @@ public class FilmController {
         }
     }
 
-    @GetMapping("/films/director/{directorId}")
+    @GetMapping("/director/{directorId}")
     public List<Film> getMostPopularDirectors(@PathVariable("directorId") Long directorId,
                                                @RequestParam("sortBy") String sort) {
+        log.info("получение сортированных фильмов режисера:" + directorId);
             return directorService.getDirectorSort(directorId, sort);
     }
 
-    @GetMapping("/films/search")
+    @GetMapping("/search")
     Collection<Film> findFilmByTitleOrDirector(@RequestParam String query,
                                                @RequestParam String by) {
         log.info("началась обработка строки, query=" + query + ",by=" + by);
@@ -95,15 +104,16 @@ public class FilmController {
         else return null;
     }
     
-    @GetMapping("/films/common")
+    @GetMapping("/common")
     Collection<Film> findFilmsByFriends(@RequestParam Long userId,
                                         @RequestParam Long friendId) {
         log.info("запрос на получение общих с другом фильмов");
         return filmService.findFilmsByFriend(userId, friendId);
     }
 
-    @DeleteMapping("/films/{filmId}")
+    @DeleteMapping("/{filmId}")
     public void  deleteFilm(@PathVariable Long filmId) {
+        log.info("запрос на удаление фильма:" + filmId);
         filmService.deleteFilm(filmId);
     }
 }
