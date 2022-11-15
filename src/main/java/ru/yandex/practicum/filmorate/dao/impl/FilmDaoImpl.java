@@ -18,7 +18,6 @@ import ru.yandex.practicum.filmorate.storage.GenreStorage;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -104,7 +103,7 @@ public class FilmDaoImpl implements FilmDao {
     }
 
     @Override
-    public Collection<Film> findFilmsByDirector(String substring) {
+    public List<Film> findFilmsByDirector(String substring) {
         log.info("продолжается обработка строки, query=" + substring);
         String sql = "SELECT *, dt.NAME AS dt_name FROM film_t f " +
                 " JOIN film_director_t fd  ON f.id = fd.film_id " +
@@ -121,7 +120,7 @@ public class FilmDaoImpl implements FilmDao {
     }
 
     @Override
-    public Collection<Film> getFilmsSearchByDirectorAndTitle(String substring) {
+    public List<Film> getFilmsSearchByDirectorAndTitle(String substring) {
         log.info("продолжается обработка строки, query=" + substring);
         String sql = "SELECT *, dt.NAME AS dt_name FROM film_t f " +
                 " LEFT JOIN film_director_t fd  ON f.id = fd.film_id" +
@@ -139,7 +138,7 @@ public class FilmDaoImpl implements FilmDao {
     }
 
     @Override
-    public Collection<Film> findFilmsByFriend(Long userId, Long friendId) {
+    public List<Film> findFilmsByFriend(Long userId, Long friendId) {
         log.info("поиск общих фильмов");
         String sql1 = "SELECT f.*, mpa.NAME AS mpa_name FROM film_t f" +
                 " JOIN MPA_RATING_T mpa on mpa.ID = F.MPA_RATING_ID" +
@@ -159,7 +158,7 @@ public class FilmDaoImpl implements FilmDao {
     }
 
     @Override
-    public Collection<Film> findFilmsByGenreAndYear(Long genreId, Integer year) {
+    public List<Film> findFilmsByGenreAndYear(Long genreId, Integer year) {
         String sql = "SELECT f.*, mpa.NAME AS mpa_name FROM film_t f " +
                      "JOIN MPA_RATING_T mpa on mpa.ID = F.MPA_RATING_ID " +
                      "WHERE f.ID IN (SELECT FILM_ID FROM film_genre_t " +

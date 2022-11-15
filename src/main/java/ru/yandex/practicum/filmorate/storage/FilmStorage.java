@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.storage;
 
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface FilmStorage {
@@ -15,15 +14,15 @@ public interface FilmStorage {
 
     Film findFilm(Long id);
 
-    Collection<Film> findFilmsByTitle(String title);
+    List<Film> findFilmsByTitle(String title);
 
-    Collection<Film> getFilmsSearchByDirectorAndTitle(String query);
+    List<Film> getFilmsSearchByDirectorAndTitle(String query);
 
-    Collection<Film> findFilmsByDirector(String by);
+    List<Film> findFilmsByDirector(String by);
 
-    Collection<Film> findFilmsByFriend(Long userId, Long friendId);
+    List<Film> findFilmsByFriend(Long userId, Long friendId);
 
-    Collection<Film> findFilmsByGenreAndYear(Long genreId, Integer year);
+    List<Film> findFilmsByGenreAndYear(Long genreId, Integer year);
 
     List<Film> getFilmsWithRecommendations(Long userId);
 

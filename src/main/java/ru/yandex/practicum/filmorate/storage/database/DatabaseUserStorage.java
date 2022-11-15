@@ -19,8 +19,6 @@ import java.util.Set;
 @Primary
 public class DatabaseUserStorage implements UserStorage {
     private final UserDao userDao;
-//    private final FriendshipDao friendshipDao;
-//    private final EventsService eventsService;
 
     @Override
     public User createUser(User user) {

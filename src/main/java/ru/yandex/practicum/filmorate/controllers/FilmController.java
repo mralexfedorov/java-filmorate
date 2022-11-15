@@ -12,7 +12,6 @@ import ru.yandex.practicum.filmorate.service.FilmService;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -87,7 +86,7 @@ public class FilmController {
     }
 
     @GetMapping("/search")
-    Collection<Film> findFilmByTitleOrDirector(@RequestParam String query,
+    List<Film> findFilmByTitleOrDirector(@RequestParam String query,
                                                @RequestParam String by) {
         log.info("началась обработка строки, query=" + query + ",by=" + by);
 
@@ -105,7 +104,7 @@ public class FilmController {
     }
     
     @GetMapping("/common")
-    Collection<Film> findFilmsByFriends(@RequestParam Long userId,
+    List<Film> findFilmsByFriends(@RequestParam Long userId,
                                         @RequestParam Long friendId) {
         log.info("запрос на получение общих с другом фильмов");
         return filmService.findFilmsByFriend(userId, friendId);

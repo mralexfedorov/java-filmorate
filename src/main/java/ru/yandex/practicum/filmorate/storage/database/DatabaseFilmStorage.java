@@ -19,7 +19,6 @@ import ru.yandex.practicum.filmorate.storage.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.MpaRatingStorage;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,17 +71,17 @@ public class DatabaseFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Collection<Film> findFilmsByTitle(String title) {
+    public List<Film> findFilmsByTitle(String title) {
         return filmDao.getFilmsByTitle(title);
     }
 
     @Override
-    public Collection<Film> findFilmsByDirector(String by) {
+    public List<Film> findFilmsByDirector(String by) {
         return filmDao.findFilmsByDirector(by);
     }
 
     @Override
-    public Collection<Film> findFilmsByFriend(Long userId, Long friendId) {
+    public List<Film> findFilmsByFriend(Long userId, Long friendId) {
         if (userId < 0 || friendId < 0) {
             throw new UserNotFoundException("Один или оба пользователя не найдены");
         }
@@ -92,12 +91,12 @@ public class DatabaseFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Collection<Film> findFilmsByGenreAndYear(Long genreId, Integer year) {
+    public List<Film> findFilmsByGenreAndYear(Long genreId, Integer year) {
         return filmDao.findFilmsByGenreAndYear(genreId, year);
     }
 
     @Override
-    public Collection<Film> getFilmsSearchByDirectorAndTitle(String substring) {
+    public List<Film> getFilmsSearchByDirectorAndTitle(String substring) {
         return filmDao.getFilmsSearchByDirectorAndTitle(substring);
     }
 
