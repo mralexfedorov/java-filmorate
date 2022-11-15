@@ -8,6 +8,11 @@ import org.springframework.test.context.jdbc.Sql;
 import ru.yandex.practicum.filmorate.dao.impl.FilmDaoImpl;
 import ru.yandex.practicum.filmorate.dao.impl.FilmGenreDaoImpl;
 import ru.yandex.practicum.filmorate.dao.impl.GenreDaoImpl;
+import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static ru.yandex.practicum.filmorate.util.Fixtures.getFilm;
@@ -30,7 +35,7 @@ public class GenreDaoTest {
     @Test
     public void shouldFindAllGenres() {
 
-        var result = genreDao.findAllGenres();
+        List<Genre> result = genreDao.findAllGenres();
 
         assertNotNull(result);
         assertEquals(6, result.size());
@@ -39,7 +44,7 @@ public class GenreDaoTest {
     @Test
     public void shouldFindGenreById() {
 
-        var genre = genreDao.findGenreById(3l);
+        Optional<Genre> genre = genreDao.findGenreById(3l);
 
         assertNotNull(genre);
         assertEquals("Мультфильм", genre.get().getName());
@@ -48,10 +53,10 @@ public class GenreDaoTest {
     @Test
     public void shouldFindGenreByFilmId() {
 
-        var film = filmDao.saveFilm(getFilm());
+        Film film = filmDao.saveFilm(getFilm());
         filmGenreDao.linkGenreToFilm(film.getId(), 3L);
 
-        var genre = genreDao.findGenreByFilmId(film.getId());
+        List<Genre> genre = genreDao.findGenreByFilmId(film.getId());
 
         assertNotNull(genre);
         assertEquals("Мультфильм", genre.get(0).getName());
@@ -60,13 +65,13 @@ public class GenreDaoTest {
     @Test
     public void shouldDeleteFilmGenres() {
 
-        var film = filmDao.saveFilm(getFilm());
+        Film film = filmDao.saveFilm(getFilm());
 
         filmGenreDao.linkGenreToFilm(film.getId(), 3L);
 
         filmGenreDao.deleteFilmGenres(film.getId());
 
-        var result = filmGenreDao.linkAlreadyExist(film.getId(), 3L);
+        boolean result = filmGenreDao.linkAlreadyExist(film.getId(), 3L);
 
         assertFalse(result);
     }

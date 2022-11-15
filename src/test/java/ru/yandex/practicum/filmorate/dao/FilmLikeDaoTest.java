@@ -14,7 +14,8 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static ru.yandex.practicum.filmorate.util.Fixtures.getFilm;
 import static ru.yandex.practicum.filmorate.util.Fixtures.getUser;
 
@@ -75,7 +76,7 @@ public class FilmLikeDaoTest {
 
         filmLikeDao.deleteLike(filmLike);
 
-        var result = filmLikeDao.getFilmLikes(film.getId());
+        List<FilmLike> result = filmLikeDao.getFilmLikes(film.getId());
 
         assertEquals(0, result.size());
     }

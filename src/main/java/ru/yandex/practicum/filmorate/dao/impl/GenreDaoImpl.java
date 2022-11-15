@@ -53,7 +53,7 @@ public class GenreDaoImpl implements GenreDao {
     }
 
     private Genre mapToGenre(ResultSet genreRows) throws SQLException {
-        var genreId = genreRows.getLong(ID);
+        Long genreId = genreRows.getLong(ID);
         if (genreId <= 0) {
             return null;
         }

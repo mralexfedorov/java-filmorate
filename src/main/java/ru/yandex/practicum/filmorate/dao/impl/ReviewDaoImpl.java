@@ -96,7 +96,7 @@ public class ReviewDaoImpl implements ReviewDao {
     }
 
     private Review mapToReview(ResultSet reviewRows) throws SQLException {
-        var reviewId = reviewRows.getLong(ID);
+        Long reviewId = reviewRows.getLong(ID);
         if (reviewId <= 0) {
             return null;
         }

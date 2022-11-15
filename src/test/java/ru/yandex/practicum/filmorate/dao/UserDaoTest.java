@@ -10,6 +10,8 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,20 +27,20 @@ public class UserDaoTest {
 
     @Test
     public void shouldCreateUser() {
-        var user = userDao.saveUser(getUser());
+        User user = userDao.saveUser(getUser());
 
         assertNotNull(user.getId());
     }
 
     @Test
     public void shouldUpdateUser() {
-        var user = userDao.saveUser(getUser());
+        User user = userDao.saveUser(getUser());
         user.setName("changed value name");
         user.setLogin("changed value login");
         user.setEmail("test2@test.ru");
         user.setBirthday(LocalDate.now().minusYears(50));
 
-        var newUser = userDao.updateUser(user);
+        User newUser = userDao.updateUser(user);
 
         assertEquals(user.getId(), newUser.getId());
         assertEquals(user.getLogin(), newUser.getLogin());
@@ -52,7 +54,7 @@ public class UserDaoTest {
         userDao.saveUser(getUser());
         userDao.saveUser(getUser());
 
-        var result = userDao.findAllUsers();
+        List<User> result = userDao.findAllUsers();
 
         assertNotNull(result);
         assertEquals(3, result.size());
@@ -60,9 +62,9 @@ public class UserDaoTest {
 
     @Test
     public void shouldFindUserById() {
-        var user = userDao.saveUser(getUser());
+        User user = userDao.saveUser(getUser());
 
-        var result = userDao.findUserById(user.getId());
+        Optional<User> result = userDao.findUserById(user.getId());
 
         assertTrue(result.isPresent());
         assertEquals(user.getId(), result.get().getId());
@@ -83,7 +85,7 @@ public class UserDaoTest {
         ids.add(user1.getId());
         ids.add(user2.getId());
 
-        var result = userDao.findAllUserByIds(ids);
+        List<User> result = userDao.findAllUserByIds(ids);
 
         assertNotNull(result);
         assertEquals(3, result.size());

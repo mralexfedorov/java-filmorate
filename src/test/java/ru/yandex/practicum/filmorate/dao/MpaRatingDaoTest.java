@@ -6,8 +6,13 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 import ru.yandex.practicum.filmorate.dao.impl.MpaRatingDaoImpl;
+import ru.yandex.practicum.filmorate.model.MpaRating;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 @JdbcTest
@@ -21,7 +26,7 @@ public class MpaRatingDaoTest {
     @Test
     public void shouldFindAllMpaRatings() {
 
-        var result = mpaRatingDao.findAllMpaRatings();
+        List<MpaRating> result = mpaRatingDao.findAllMpaRatings();
 
         assertNotNull(result);
         assertEquals(5, result.size());
@@ -30,7 +35,7 @@ public class MpaRatingDaoTest {
     @Test
     public void shouldFindMpaRatingById() {
 
-        var mpaRating = mpaRatingDao.findMpaRatingById(4L);
+        Optional<MpaRating> mpaRating = mpaRatingDao.findMpaRatingById(4L);
 
         assertNotNull(mpaRating);
         assertEquals("R", mpaRating.get().getName());

@@ -11,6 +11,7 @@ import ru.yandex.practicum.filmorate.storage.FriendshipStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -27,10 +28,10 @@ public class FriendshipServiceImpl implements FriendshipService {
     public Friendship addFriend(Long userId, Long friendId) {
         userStorage.findUserById(userId);
         userStorage.findUserById(friendId);
-            return friendshipStorage.createFriendship(Friendship.builder()
-                    .userId(userId)
-                    .friendId(friendId)
-                    .build());
+        return friendshipStorage.createFriendship(Friendship.builder()
+                .userId(userId)
+                .friendId(friendId)
+                .build());
     }
 
     @Override
@@ -43,20 +44,20 @@ public class FriendshipServiceImpl implements FriendshipService {
 
     @Override
     public List<User> getFriends(Long userId) {
-        var user = userDao.findUserById(userId);
+        Optional<User> user = userDao.findUserById(userId);
         if (user.isPresent()) {
             Set<Long> friendIds = friendshipStorage.findFriendIdsByUserId(userId);
             return userStorage.findAllUsersByIds(friendIds);
         }
         throw new UserNotFoundException("Невозможно получить друзей у несуществующих пользователей");
-        }
+    }
 
 
     @Override
     public List<User> getCommonFriends(Long userId1, Long userId2) {
         Set<Long> friend1Ids = friendshipStorage.findFriendIdsByUserId(userId1);
         Set<Long> friend2Ids = friendshipStorage.findFriendIdsByUserId(userId2);
-        var commonFriendIds = findCommonElements(friend1Ids, friend2Ids);
+        Set<Long> commonFriendIds = findCommonElements(friend1Ids, friend2Ids);
         return userStorage.findAllUsersByIds(commonFriendIds);
     }
 

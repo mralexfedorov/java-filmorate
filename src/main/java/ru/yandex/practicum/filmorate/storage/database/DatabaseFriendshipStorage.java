@@ -22,14 +22,14 @@ public class DatabaseFriendshipStorage implements FriendshipStorage {
 
     @Override
     public Friendship createFriendship(Friendship friendship) {
-        var saveFriend = friendshipDao.saveFriendship(friendship);
+        Friendship saveFriend = friendshipDao.saveFriendship(friendship);
         eventsService.addInFriendEvents(friendship.getUserId(), friendship.getFriendId());
         return saveFriend;
     }
 
     @Override
     public void deleteFriendship(Friendship friendship) {
-        var idFriend =  friendshipDao.deleteFriendship(friendship);
+        Long idFriend =  friendshipDao.deleteFriendship(friendship);
         if (idFriend == null){
             return;
         }

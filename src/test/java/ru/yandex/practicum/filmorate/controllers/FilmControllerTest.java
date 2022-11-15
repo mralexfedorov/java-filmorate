@@ -38,7 +38,7 @@ public class FilmControllerTest {
 
     @Test
     public void shouldCreateFilm() throws Exception {
-        var film = getFilm();
+        Film film = getFilm();
 
         String result = mockMvc.perform(post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -53,7 +53,7 @@ public class FilmControllerTest {
 
     @Test
     public void shouldNotCreateFilmBecauseOfEmptyName() throws Exception {
-        var film = getFilm();
+        Film film = getFilm();
         film.setName(" ");
 
         mockMvc.perform(post("/films")
@@ -69,7 +69,7 @@ public class FilmControllerTest {
 
     @Test
     public void shouldNotCreateFilmBecauseOfIncorrectReleaseDate() throws Exception {
-        var film = getFilm();
+        Film film = getFilm();
         film.setReleaseDate(LocalDate.of(1888, 12, 28));
 
         mockMvc.perform(post("/films")
@@ -85,7 +85,7 @@ public class FilmControllerTest {
 
     @Test
     public void shouldNotCreateFilmBecauseDescriptionMore200() throws Exception {
-        var film = getFilm();
+        Film film = getFilm();
         film.setDescription("Тестовое описание Тестовое описание Тестовое описание Тестовое описание " +
                 "Тестовое описание Тестовое описание Тестовое описание Тестовое описание " +
                 "Тестовое описание Тестовое описание Тестовое описание Тестовое описание " +
@@ -105,7 +105,7 @@ public class FilmControllerTest {
 
     @Test
     public void shouldNotCreateFilmBecauseDurationNegative() throws Exception {
-        var film = getFilm();
+        Film film = getFilm();
         film.setDuration(-120);
 
         mockMvc.perform(post("/films")
@@ -122,7 +122,7 @@ public class FilmControllerTest {
 
     @Test
     public void shouldUpdateFilm() throws Exception {
-        var film = getFilm();
+        Film film = getFilm();
         controller.createFilm(film);
 
         film.setDuration(120);
@@ -141,7 +141,7 @@ public class FilmControllerTest {
 
     @Test
     public void shouldNotUpdateFilmBecauseNotFoundFilm() throws Exception {
-        var film = getFilm();
+        Film film = getFilm();
 
         controller.createFilm(film);
         film.setId(-1L);

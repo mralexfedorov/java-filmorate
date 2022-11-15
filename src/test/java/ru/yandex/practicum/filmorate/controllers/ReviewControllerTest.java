@@ -61,7 +61,7 @@ public class ReviewControllerTest {
         user = userDao.saveUser(getUser());
         film = filmDao.saveFilm(getFilm());
 
-        var review = getReview();
+        Review review = getReview();
 
         review.setUserId(user.getId());
         review.setFilmId(film.getId());
@@ -83,7 +83,7 @@ public class ReviewControllerTest {
         user = userDao.saveUser(getUser());
         film = filmDao.saveFilm(getFilm());
 
-        var review = getReview();
+        Review review = getReview();
 
         review.setUserId(user.getId());
         review.setFilmId(film.getId());
@@ -106,7 +106,7 @@ public class ReviewControllerTest {
 
         film = filmDao.saveFilm(getFilm());
 
-        var review = getReview();
+        Review review = getReview();
 
         review.setFilmId(film.getId());
         review.setUserId(-1L);
@@ -127,7 +127,7 @@ public class ReviewControllerTest {
     public void shouldNotCreateFilmBecauseFilmIdNegative() throws Exception {
 
         user = userDao.saveUser(getUser());
-        var review = getReview();
+        Review review = getReview();
 
         review.setUserId(user.getId());
         review.setFilmId(-1L);
@@ -149,12 +149,12 @@ public class ReviewControllerTest {
         user = userDao.saveUser(getUser());
         film = filmDao.saveFilm(getFilm());
 
-        var review = getReview();
+        Review review = getReview();
 
         review.setUserId(user.getId());
         review.setFilmId(film.getId());
 
-        var reviewResult = reviewDao.saveReview(review);
+        Review reviewResult = reviewDao.saveReview(review);
 
         reviewResult.setIsPositive(false);
         reviewResult.setContent("Отзыв отрицательный.");
@@ -175,7 +175,7 @@ public class ReviewControllerTest {
         user = userDao.saveUser(getUser());
         film = filmDao.saveFilm(getFilm());
 
-        var review = getReview();
+        Review review = getReview();
 
         review.setUserId(user.getId());
         review.setFilmId(film.getId());
@@ -199,7 +199,7 @@ public class ReviewControllerTest {
         user = userDao.saveUser(getUser());
         film = filmDao.saveFilm(getFilm());
 
-        var review = getReview();
+        Review review = getReview();
 
         review.setUserId(user.getId());
         review.setFilmId(film.getId());
@@ -218,14 +218,14 @@ public class ReviewControllerTest {
         user = userDao.saveUser(getUser());
         film = filmDao.saveFilm(getFilm());
 
-        var review = getReview();
+        Review review = getReview();
 
         review.setUserId(user.getId());
         review.setFilmId(film.getId());
 
         reviewDao.saveReview(review);
 
-        var review2 = getReview();
+        Review review2 = getReview();
 
         review2.setUserId(user.getId());
         review2.setFilmId(film.getId());
@@ -245,7 +245,7 @@ public class ReviewControllerTest {
         user = userDao.saveUser(getUser());
         film = filmDao.saveFilm(getFilm());
 
-        var review = getReview();
+        Review review = getReview();
 
         review.setUserId(user.getId());
         review.setFilmId(film.getId());
@@ -266,7 +266,7 @@ public class ReviewControllerTest {
         user = userDao.saveUser(getUser());
         film = filmDao.saveFilm(getFilm());
 
-        var review = getReview();
+        Review review = getReview();
 
         review.setUserId(user.getId());
         review.setFilmId(film.getId());
@@ -287,7 +287,7 @@ public class ReviewControllerTest {
         user = userDao.saveUser(getUser());
         film = filmDao.saveFilm(getFilm());
 
-        var review = getReview();
+        Review review = getReview();
 
         review.setUserId(user.getId());
         review.setFilmId(film.getId());
@@ -308,7 +308,7 @@ public class ReviewControllerTest {
         user = userDao.saveUser(getUser());
         film = filmDao.saveFilm(getFilm());
 
-        var review = getReview();
+        Review review = getReview();
 
         review.setUserId(user.getId());
         review.setFilmId(film.getId());

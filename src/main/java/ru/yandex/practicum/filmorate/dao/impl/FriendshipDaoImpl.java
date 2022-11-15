@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.dao.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.constant.FriendshipConstant;
 import ru.yandex.practicum.filmorate.dao.FriendshipDao;
@@ -46,13 +47,13 @@ public class FriendshipDaoImpl implements FriendshipDao {
 
         String sqlToFriendshipTableId = "select FRIEND_ID  from FRIENDSHIP_T where user_id = ? and friend_id = ?";
 
-        var resultSet = jdbcTemplate.queryForRowSet(sqlToFriendshipTableId,
+        SqlRowSet resultSet = jdbcTemplate.queryForRowSet(sqlToFriendshipTableId,
                         friendship.getUserId(),
                         friendship.getFriendId());
         if(!resultSet.next()){
           return null;
         }
-        var idFriend = resultSet.getLong("FRIEND_ID");
+        Long idFriend = resultSet.getLong("FRIEND_ID");
 
         String sqlToFriendshipTable = "delete from friendship_t where user_id = ? and friend_id = ?";
         jdbcTemplate.update(sqlToFriendshipTable, friendship.getUserId(),
@@ -95,8 +96,8 @@ public class FriendshipDaoImpl implements FriendshipDao {
     }
 
     private Friendship mapToFriendship(ResultSet friendshipRows) throws SQLException {
-        var userId = friendshipRows.getLong(USER_ID);
-        var friendId = friendshipRows.getLong(FRIEND_ID);
+        Long userId = friendshipRows.getLong(USER_ID);
+        Long friendId = friendshipRows.getLong(FRIEND_ID);
         if (userId <= 0 || friendId <= 0) {
             return null;
         }

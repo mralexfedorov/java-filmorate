@@ -11,6 +11,7 @@ import ru.yandex.practicum.filmorate.model.Friendship;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -82,7 +83,7 @@ public class FriendshipDaoTest {
 
         friendshipDao.deleteFriendship(friendship);
 
-        var result = friendshipDao.findFriendship(friendship);
+        Optional<Friendship> result = friendshipDao.findFriendship(friendship);
 
         assertFalse(result.isPresent());
     }

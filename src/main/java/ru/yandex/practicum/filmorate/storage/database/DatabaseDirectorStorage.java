@@ -29,7 +29,7 @@ public class DatabaseDirectorStorage implements DirectorStorage {
     public Director findDirectorById(Long id) {
         Optional<Director> directorOpt = directorDao.findDirectorById(id);
         if (directorOpt.isPresent()) {
-            var director = directorOpt.get();
+            Director director = directorOpt.get();
             return director;
         }
         throw new DirectorNotFoundException(

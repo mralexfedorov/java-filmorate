@@ -116,7 +116,7 @@ public class DirectorDaoImpl implements DirectorDao {
     }
 
     private Director mapToDirector(ResultSet directorRows) throws SQLException {
-        var filmId = directorRows.getLong(ID);
+        Long filmId = directorRows.getLong(ID);
         if (filmId <= 0) {
             return null;
         }

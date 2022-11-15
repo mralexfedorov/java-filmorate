@@ -9,6 +9,9 @@ import ru.yandex.practicum.filmorate.dao.impl.FilmDaoImpl;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.MpaRating;
 
+import java.util.List;
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static ru.yandex.practicum.filmorate.util.Fixtures.getFilm;
 
@@ -23,7 +26,7 @@ public class FilmDaoTest {
     @Test
     public void shouldCreateFilm() {
 
-        var film = filmDao.saveFilm(getFilm());
+        Film film = filmDao.saveFilm(getFilm());
 
         assertNotNull(film.getId());
     }
@@ -31,12 +34,12 @@ public class FilmDaoTest {
     @Test
     public void shouldUpdateFilm() {
 
-        var film = filmDao.saveFilm(getFilm());
+        Film film = filmDao.saveFilm(getFilm());
 
         film.setName("changed value name");
         film.setMpa(new MpaRating(2L, "PG13"));
 
-        var newFilm = filmDao.updateFilm(film);
+        Film newFilm = filmDao.updateFilm(film);
 
         assertEquals(film.getId(), newFilm.getId());
         assertEquals(film.getName(), newFilm.getName());
@@ -47,7 +50,7 @@ public class FilmDaoTest {
     public void shouldFindFilmById() {
         Film film = filmDao.saveFilm(getFilm());
 
-        var result = filmDao.findFilmById(film.getId());
+        Optional<Film> result = filmDao.findFilmById(film.getId());
 
         assertTrue(result.isPresent());
         assertEquals(film.getId(), result.get().getId());
@@ -64,7 +67,7 @@ public class FilmDaoTest {
         filmDao.saveFilm(getFilm());
         filmDao.saveFilm(getFilm());
 
-        var result = filmDao.findAllFilms();
+        List<Film> result = filmDao.findAllFilms();
 
         assertNotNull(result);
         assertEquals(3, result.size());

@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.GenreStorage;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @Slf4j
@@ -26,7 +27,7 @@ public class DatabaseGenreStorage implements GenreStorage {
 
     @Override
     public Genre findGenreById(Long id) {
-        var genre = genreDao.findGenreById(id);
+        Optional<Genre> genre = genreDao.findGenreById(id);
         if (genre.isPresent()) {
             return genre.get();
         }

@@ -45,14 +45,13 @@ public class DatabaseUserStorage implements UserStorage {
 
     @Override
     public User findUserById(Long id) {
-        var user = userDao.findUserById(id);
+        Optional<User> user = userDao.findUserById(id);
         if (user.isPresent()) {
             return user.get();
         }
         throw new UserNotFoundException(
                 String.format("Пользователь с таким id %s не существует", id));
     }
-    //тест
 
     @Override
     public List<User> findAllUsersByIds(Set<Long> ids) {

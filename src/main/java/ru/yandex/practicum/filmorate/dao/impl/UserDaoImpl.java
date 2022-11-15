@@ -94,7 +94,7 @@ public class UserDaoImpl implements UserDao {
 
 
     private User mapToUser(ResultSet userRows) throws SQLException { //
-        var userId = userRows.getLong(ID);
+        Long userId = userRows.getLong(ID);
         if (userId <= 0) {
             return null;
         }

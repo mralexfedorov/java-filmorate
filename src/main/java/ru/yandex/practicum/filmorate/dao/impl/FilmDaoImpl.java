@@ -30,9 +30,7 @@ import static ru.yandex.practicum.filmorate.constant.FilmConstant.*;
 @AllArgsConstructor
 public class FilmDaoImpl implements FilmDao {
     private final JdbcTemplate jdbcTemplate;
-    GenreDao genreDao;
-    DirectorStorage directorStorage;
-    GenreStorage genreStorage;
+    private final GenreStorage genreStorage;
 
     @Override
     public Film saveFilm(Film film) {
@@ -201,7 +199,7 @@ public class FilmDaoImpl implements FilmDao {
     }
 
     private Film mapToFilm(ResultSet filmRows) throws SQLException {
-        var filmId = filmRows.getLong(ID);
+        Long filmId = filmRows.getLong(ID);
         if (filmId <= 0) {
             return null;
         }
@@ -218,7 +216,7 @@ public class FilmDaoImpl implements FilmDao {
     }
 
     private Film mapToFilmWithMpaName(ResultSet filmRows) throws SQLException {
-        var filmId = filmRows.getLong(ID);
+        Long filmId = filmRows.getLong(ID);
         log.info("id=" + filmId);
         if (filmId <= 0) {
             return null;
@@ -241,7 +239,7 @@ public class FilmDaoImpl implements FilmDao {
     }
     
     private Film mapRowToFilmWithDirector(ResultSet rs) throws SQLException {
-        var filmId = rs.getLong(ID);
+        Long filmId = rs.getLong(ID);
         log.info("id=" + filmId);
         if (filmId <= 0) {
             return null;
@@ -257,8 +255,8 @@ public class FilmDaoImpl implements FilmDao {
                         .id(rs.getLong(FilmConstant.MPA_RATING_ID))
                         .build());
 
-        var idDirector = rs.getLong(DirectorConstant.DIRECTOR_ID);
-        var nameDirector = rs.getString("dt_name");
+        Long idDirector = rs.getLong(DirectorConstant.DIRECTOR_ID);
+        String nameDirector = rs.getString("dt_name");
 
         if (idDirector > 0 && nameDirector != null) {
             film.setDirectors(List.of(Director

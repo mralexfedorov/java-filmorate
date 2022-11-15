@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.model.MpaRating;
 import ru.yandex.practicum.filmorate.storage.MpaRatingStorage;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @Slf4j
@@ -26,7 +27,7 @@ public class DatabaseMpaRatingStorage implements MpaRatingStorage {
 
     @Override
     public MpaRating findMpaRatingById(Long id) {
-        var mpaRating = mpaRatingDao.findMpaRatingById(id);
+        Optional<MpaRating> mpaRating = mpaRatingDao.findMpaRatingById(id);
         if (mpaRating.isPresent()) {
             return mpaRating.get();
         }

@@ -32,7 +32,6 @@ public class DatabaseFilmStorage implements FilmStorage {
     private final MpaRatingStorage mpaRatingStorage;
     private final GenreStorage genreStorage;
     private final DirectorStorage directorStorage;
-
     private final FilmGenreDao filmGenreDao;
     private final DirectorDao directorDao;
 
@@ -58,7 +57,7 @@ public class DatabaseFilmStorage implements FilmStorage {
     public Film findFilm(Long id) {
         Optional<Film> filmOpt = filmDao.findFilmById(id);
         if (filmOpt.isPresent()) {
-            var film = filmOpt.get();
+            Film film = filmOpt.get();
             if (film.getMpa() != null & film.getMpa().getId() != null) {
                 film.setMpa(mpaRatingStorage.findMpaRatingById(film.getMpa().getId()));
             }
@@ -85,7 +84,7 @@ public class DatabaseFilmStorage implements FilmStorage {
         if (userId < 0 || friendId < 0) {
             throw new UserNotFoundException("Один или оба пользователя не найдены");
         }
-        var result= filmDao.findFilmsByFriend(userId, friendId);
+        Collection<Film> result= filmDao.findFilmsByFriend(userId, friendId);
         log.info("поиск общих фильмов finish");
         return result;
     }
@@ -129,7 +128,7 @@ public class DatabaseFilmStorage implements FilmStorage {
 
     @Override
     public List<Film> findAllFilms() {
-        var films = filmDao.findAllFilms();
+        List<Film> films = filmDao.findAllFilms();
         if (CollectionUtils.isEmpty(films)) {
             return films;
         }

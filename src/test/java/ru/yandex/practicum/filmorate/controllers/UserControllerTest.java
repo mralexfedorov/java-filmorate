@@ -38,7 +38,7 @@ public class UserControllerTest {
 
     @Test
     public void shouldCreateUser() throws Exception {
-        var user = getUser();
+        User user = getUser();
 
         String result = mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -53,7 +53,7 @@ public class UserControllerTest {
 
     @Test
     public void shouldNotCreateUserWithIncorrectLogin() throws Exception {
-        var user = getUser();
+        User user = getUser();
 
         user.setLogin("Test Login");
 
@@ -72,7 +72,7 @@ public class UserControllerTest {
 
     @Test
     public void shouldNotCreateUserBecauseOfIncorrectEmail() throws Exception {
-        var user = getUser();
+        User user = getUser();
         user.setEmail("mail.ru");
 
         mockMvc.perform(post("/users")
@@ -88,7 +88,7 @@ public class UserControllerTest {
 
     @Test
     public void shouldNotCreateUserBecauseOfIncorrectBirthday() throws Exception {
-        var user = getUser();
+        User user = getUser();
         user.setBirthday(LocalDate.now().plusDays(100));
 
         mockMvc.perform(post("/users")
@@ -104,7 +104,7 @@ public class UserControllerTest {
 
     @Test
     public void shouldCreateUserWithEmptyName() throws Exception {
-        var user = getUser();
+        User user = getUser();
 
         user.setName("");
 
@@ -121,7 +121,7 @@ public class UserControllerTest {
 
     @Test
     public void shouldUpdateLogin() throws Exception {
-        var user = getUser();
+        User user = getUser();
         controller.createUser(user);
         user.setLogin("НовыйТестЛогин");
 
@@ -137,7 +137,7 @@ public class UserControllerTest {
 
     @Test
     public void shouldNotUpdateUserBecauseNotFoundUser() throws Exception {
-        var user = getUser();
+        User user = getUser();
 
         controller.createUser(user);
         user.setId(-1L);

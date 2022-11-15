@@ -10,7 +10,11 @@ import ru.yandex.practicum.filmorate.dao.impl.FilmDaoImpl;
 import ru.yandex.practicum.filmorate.dao.impl.ReviewDaoImpl;
 import ru.yandex.practicum.filmorate.dao.impl.UserDaoImpl;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Review;
 import ru.yandex.practicum.filmorate.model.User;
+
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static ru.yandex.practicum.filmorate.util.Fixtures.*;
@@ -38,7 +42,7 @@ public class ReviewDaoTest {
         user = userDao.saveUser(getUser());
         film = filmDao.saveFilm(getFilm());
 
-        var review = getReview();
+        Review review = getReview();
 
         review.setUserId(user.getId());
         review.setFilmId(film.getId());
@@ -51,7 +55,7 @@ public class ReviewDaoTest {
     @Test
     public void shouldCreateReview() {
 
-        var review = getReview();
+        Review review = getReview();
 
         review.setUserId(user.getId());
         review.setFilmId(film.getId());
@@ -64,7 +68,7 @@ public class ReviewDaoTest {
     @Test
     public void shouldUpdateReviewIsNotPositive() {
 
-        var review = getReview();
+        Review review = getReview();
 
         review.setUserId(user.getId());
         review.setFilmId(film.getId());
@@ -74,7 +78,7 @@ public class ReviewDaoTest {
         review.setIsPositive(false);
         review.setContent("Отзыв отрицательный");
 
-        var newReview = reviewDao.updateReviewToPositive(review);
+        Review newReview = reviewDao.updateReviewToPositive(review);
 
         assertEquals(review.getId(), newReview.getId());
         assertEquals(review.getContent(), newReview.getContent());
@@ -84,7 +88,7 @@ public class ReviewDaoTest {
     @Test
     public void shouldUpdateReviewUseful() {
 
-        var review = getReview();
+        Review review = getReview();
 
         review.setUserId(user.getId());
         review.setFilmId(film.getId());
@@ -93,7 +97,7 @@ public class ReviewDaoTest {
 
         review.setUseful(10);
 
-        var newReview = reviewDao.updateReviewToPositive(review);
+        Review newReview = reviewDao.updateReviewToPositive(review);
 
         assertEquals(review.getId(), newReview.getId());
         assertEquals(review.getUseful(), newReview.getUseful());
@@ -103,17 +107,17 @@ public class ReviewDaoTest {
     @Test
     public void shouldFindReviewById() {
 
-        var user = userDao.saveUser(getUser());
-        var film = filmDao.saveFilm(getFilm());
+        User user = userDao.saveUser(getUser());
+        Film film = filmDao.saveFilm(getFilm());
 
-        var review = getReview();
+        Review review = getReview();
 
         review.setUserId(user.getId());
         review.setFilmId(film.getId());
 
-        var newReview = reviewDao.saveReview(review);
+        Review newReview = reviewDao.saveReview(review);
 
-        var result = reviewDao.findReviewById(newReview.getId());
+        Optional<Review> result = reviewDao.findReviewById(newReview.getId());
 
         assertTrue(result.isPresent());
         assertEquals(review.getId(), result.get().getId());
@@ -127,10 +131,10 @@ public class ReviewDaoTest {
     @Test
     public void shouldDeleteReviewById() {
 
-        var user = userDao.saveUser(getUser());
-        var film = filmDao.saveFilm(getFilm());
+        User user = userDao.saveUser(getUser());
+        Film film = filmDao.saveFilm(getFilm());
 
-        var review = getReview();
+        Review review = getReview();
 
         review.setUserId(user.getId());
         review.setFilmId(film.getId());
@@ -139,7 +143,7 @@ public class ReviewDaoTest {
 
         reviewDao.deleteReviewById(review.getId());
 
-        var result = reviewDao.findReviewById(review.getId());
+        Optional<Review> result = reviewDao.findReviewById(review.getId());
 
         assertTrue(result.isEmpty());
     }
@@ -147,31 +151,31 @@ public class ReviewDaoTest {
     @Test
     public void shouldFindAllReviewByFilmId() {
 
-        var user = userDao.saveUser(getUser());
-        var film = filmDao.saveFilm(getFilm());
+        User user = userDao.saveUser(getUser());
+        Film film = filmDao.saveFilm(getFilm());
 
-        var review = getReview();
+        Review review = getReview();
 
         review.setUserId(user.getId());
         review.setFilmId(film.getId());
 
         reviewDao.saveReview(review);
 
-        var review2 = getReview();
+        Review review2 = getReview();
 
         review2.setUserId(user.getId());
         review2.setFilmId(film.getId());
 
         reviewDao.saveReview(review2);
 
-        var review3 = getReview();
+        Review review3 = getReview();
 
         review3.setUserId(user.getId());
         review3.setFilmId(film.getId());
 
         reviewDao.saveReview(review3);
 
-        var result = reviewDao.findAllReviewByFilmId(film.getId(), 2);
+        List<Review> result = reviewDao.findAllReviewByFilmId(film.getId(), 2);
 
         assertNotNull(result);
         assertEquals(2, result.size());
@@ -180,31 +184,31 @@ public class ReviewDaoTest {
     @Test
     public void  shouldFindAllReviews() {
 
-        var user = userDao.saveUser(getUser());
-        var film = filmDao.saveFilm(getFilm());
+        User user = userDao.saveUser(getUser());
+        Film film = filmDao.saveFilm(getFilm());
 
-        var review = getReview();
+        Review review = getReview();
 
         review.setUserId(user.getId());
         review.setFilmId(film.getId());
 
         reviewDao.saveReview(review);
 
-        var review2 = getReview();
+        Review review2 = getReview();
 
         review2.setUserId(user.getId());
         review2.setFilmId(film.getId());
 
         reviewDao.saveReview(review2);
 
-        var review3 = getReview();
+        Review review3 = getReview();
 
         review3.setUserId(user.getId());
         review3.setFilmId(film.getId());
 
         reviewDao.saveReview(review3);
 
-        var result = reviewDao.findAllReviews();
+        List<Review> result = reviewDao.findAllReviews();
 
         assertNotNull(result);
         assertEquals(4, result.size());

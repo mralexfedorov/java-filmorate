@@ -54,8 +54,8 @@ public class FilmLikeDaoImpl implements FilmLikeDao {
     }
 
     private FilmLike mapToFilmLike(ResultSet filmLikeRows) throws SQLException {
-        var userId = filmLikeRows.getLong(USER_ID);
-        var filmId = filmLikeRows.getLong(FILM_ID);
+        Long userId = filmLikeRows.getLong(USER_ID);
+        Long filmId = filmLikeRows.getLong(FILM_ID);
         if (userId <= 0 || filmId <= 0) {
             return null;
         }
