@@ -84,7 +84,7 @@ public class DatabaseFilmStorage implements FilmStorage {
         if (userId < 0 || friendId < 0) {
             throw new UserNotFoundException("Один или оба пользователя не найдены");
         }
-        Collection<Film> result= filmDao.findFilmsByFriend(userId, friendId);
+        List<Film> result= filmDao.findFilmsByFriend(userId, friendId);
         log.info("поиск общих фильмов finish");
         return result;
     }
