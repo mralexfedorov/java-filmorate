@@ -26,7 +26,7 @@ public class DatabaseFilmLikeStorage implements FilmLikeStorage {
     public FilmLike saveLike(FilmLike filmLike) {
         filmLikeDao.saveLike(filmLike);
         eventsService.addPreviewLikeEvents(filmLike.getUserId(), filmLike.getFilmId());
-        log.debug("Ваш лайк учтен.");
+        log.debug("Пользователю {} понравился фильм {} ", filmLike.getUserId(), filmLike.getFilmId());
         return filmLike;
     }
 
@@ -40,7 +40,7 @@ public class DatabaseFilmLikeStorage implements FilmLikeStorage {
         filmStorage.findFilm(filmLike.getFilmId());
         filmLikeDao.deleteLike(filmLike);
         eventsService.removePreviewLikeEvents(filmLike.getUserId(), filmLike.getFilmId());
-        log.debug("Ваш лайк удален.");
+        log.debug("Пользователь {} отменил лайк фильма {} ", filmLike.getUserId(), filmLike.getFilmId());
     }
 
 }
