@@ -2,10 +2,9 @@ package ru.yandex.practicum.filmorate.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.model.*;
+import ru.yandex.practicum.filmorate.model.Events;
 import ru.yandex.practicum.filmorate.service.EventsService;
 import ru.yandex.practicum.filmorate.storage.EventsStorage;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.List;
 
@@ -14,7 +13,6 @@ import java.util.List;
 public class EventsServiceImpl implements EventsService {
 
     private final EventsStorage eventsStorage;
-    private final UserStorage userStorage;
 
     @Override
     public void addInFriendEvents(Long userId, Long entityId) {

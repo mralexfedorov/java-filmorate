@@ -8,11 +8,9 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.constant.DirectorConstant;
 import ru.yandex.practicum.filmorate.constant.FilmConstant;
 import ru.yandex.practicum.filmorate.dao.FilmDao;
-import ru.yandex.practicum.filmorate.dao.GenreDao;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.MpaRating;
-import ru.yandex.practicum.filmorate.storage.DirectorStorage;
 import ru.yandex.practicum.filmorate.storage.GenreStorage;
 
 import java.sql.ResultSet;
