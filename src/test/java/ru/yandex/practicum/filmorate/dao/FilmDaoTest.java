@@ -6,8 +6,10 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 import ru.yandex.practicum.filmorate.dao.impl.FilmDaoImpl;
+import ru.yandex.practicum.filmorate.dao.impl.GenreDaoImpl;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.MpaRating;
+import ru.yandex.practicum.filmorate.storage.database.DatabaseGenreStorage;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +19,7 @@ import static ru.yandex.practicum.filmorate.util.Fixtures.getFilm;
 
 @JdbcTest
 @Sql({"classpath:/schema.sql", "classpath:/data.sql"})
-@Import(FilmDaoImpl.class)
+@Import({FilmDaoImpl.class, DatabaseGenreStorage.class, GenreDaoImpl.class})
 public class FilmDaoTest {
 
     @Autowired
